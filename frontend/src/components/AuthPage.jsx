@@ -15,7 +15,18 @@ const AuthPage = ({ onLogin }) => {
   };
 
   const handleAuthSubmit = (e) => {
-    e.preventDefault();
+  e.preventDefault();
+  
+  // 1. Capture the name (or fallback)
+  const finalName = nameInput.trim() || "DEV_ROOT";
+
+  // 2. Call the prop passed from App.jsx
+  // This is the "Magic Key" that unlocks the Bento Grid
+  onLogin(finalName); 
+  
+  // 3. Send them back to the Home page
+  navigate('/');
+};
     
     // Logic: Use the name provided, or extract from email, or fallback
     const displayName = nameInput.trim() 
