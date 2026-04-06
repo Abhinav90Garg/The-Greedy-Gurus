@@ -1,8 +1,5 @@
 import React from 'react';
-import { 
-  Terminal, Cpu, LayoutGrid, Zap, ArrowRight, 
-  Users, Video, BarChart3, FileSearch, Github, Linkedin, Mail 
-} from 'lucide-react';
+import * as Icons from 'lucide-react'; // This is the secret fix
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
