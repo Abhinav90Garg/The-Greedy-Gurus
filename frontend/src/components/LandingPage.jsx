@@ -161,13 +161,13 @@ const LandingPage = ({ isLoggedIn, user, onLogout }) => {
               </div>
             </div>
             <div className="flex gap-4">
-              <div className="p-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/5 text-gray-400 hover:text-white transition-all cursor-pointer">
-                <Icons.Github size={22} />
-              </div>
-              <div className="p-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/5 text-gray-400 hover:text-white transition-all cursor-pointer">
-                <Icons.Linkedin size={22} />
-              </div>
-            </div>
+  <div className="p-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/5 text-gray-400 hover:text-white transition-all cursor-pointer">
+    {Icons.Github ? <Icons.Github size={22} /> : <Icons.Globe size={22} />}
+  </div>
+  <div className="p-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/5 text-gray-400 hover:text-white transition-all cursor-pointer">
+    {Icons.Linkedin ? <Icons.Linkedin size={22} /> : <Icons.User size={22} />}
+  </div>
+</div>
           </div>
         </footer>
       )}
