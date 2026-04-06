@@ -33,7 +33,7 @@ const LandingPage = () => {
             <div className="p-2 bg-purple-500/20 rounded-xl border border-purple-500/30">
               <Icons.Cpu size={20} className="text-purple-400" />
             </div>
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-500 uppercase">Toolkit_OS</span>
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-500 uppercase">OS</span>
           </div>
           <button 
             onClick={() => navigate('/dashboard')} 
@@ -48,9 +48,7 @@ const LandingPage = () => {
       {/* Hero Section */}
       <main className="max-w-7xl mx-auto px-6 pt-52 pb-40 relative z-10 text-center">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-          <div className="inline-block px-4 py-1.5 rounded-full border border-white/10 bg-white/5 text-[10px] font-mono text-purple-400 tracking-[0.2em] mb-12">
-            v1.0.4 AVAILABLE_FOR_DEPLOYMENT
-          </div>
+          
           <h1 className="text-6xl md:text-[8rem] font-black tracking-tighter leading-[0.85] mb-12 italic">
             The Future of <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-b from-white via-white to-white/20 block not-italic">Workflow.</span>
@@ -102,16 +100,17 @@ const LandingPage = () => {
             </div>
           </div>
           <div className="flex gap-4">
-            <a href="#" className="p-4 rounded-2xl bg-white/5 hover:bg-white/10 transition-all border border-white/5 text-gray-400 hover:text-white">
-              <Icons.Github size={22} />
-            </a>
-            <a href="#" className="p-4 rounded-2xl bg-white/5 hover:bg-white/10 transition-all border border-white/5 text-gray-400 hover:text-white">
-              <Icons.Linkedin size={22} />
-            </a>
-            <a href="#" className="p-4 rounded-2xl bg-white/5 hover:bg-white/10 transition-all border border-white/5 text-gray-400 hover:text-white">
-              <Icons.Mail size={22} />
-            </a>
-          </div>
+  {/* Wrap icons in a small check to ensure they aren't undefined */}
+  <a href="#" className="p-4 rounded-2xl bg-white/5 hover:bg-white/10 transition-all border border-white/5 text-gray-400 hover:text-white">
+    {Icons.Github ? <Icons.Github size={22} /> : <Icons.Globe size={22} />}
+  </a>
+  <a href="#" className="p-4 rounded-2xl bg-white/5 hover:bg-white/10 transition-all border border-white/5 text-gray-400 hover:text-white">
+    {Icons.Linkedin ? <Icons.Linkedin size={22} /> : <Icons.User size={22} />}
+  </a>
+  <a href="#" className="p-4 rounded-2xl bg-white/5 hover:bg-white/10 transition-all border border-white/5 text-gray-400 hover:text-white">
+    {Icons.Mail ? <Icons.Mail size={22} /> : <Icons.Send size={22} />}
+  </a>
+</div>
         </div>
       </footer>
     </div>
