@@ -2,8 +2,19 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 import requests
 import uuid
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # store chats: {chat_id: [messages]}
 chats = {}
@@ -24,25 +35,17 @@ def get_chats():
 
 @app.post("/ask")
 def ask(query: Query):
-    chat_id = query.chat_id
-
-    if chat_id not in chats:
-        chats[chat_id] = []
-
-    chats[chat_id].append(query.question)
-    chats[chat_id] = chats[chat_id][-3:]  # keep last 3
-
-    context = "\n".join(chats[chat_id])
+    print("REQUEST RECEIVED:", query.question)
 
     response = requests.post(
         "http://localhost:11434/api/generate",
         json={
             "model": "llama3",
-            "prompt": context,
+            "prompt": query.question,
             "stream": False
         }
     )
 
-    result = response.json()
+    print("OLLAMA RESPONSE:", response.text)
 
-    return {"answer": result["response"]}
+    return {"answer": response.json().get("response", "No response")}
