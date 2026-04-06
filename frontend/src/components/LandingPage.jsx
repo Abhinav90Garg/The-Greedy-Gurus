@@ -88,7 +88,6 @@ const LandingPage = ({ isLoggedIn, user, onLogout }) => {
         {/* Locked / Bento Section */}
         <div className="relative mt-60">
           {!isLoggedIn ? (
-            /* System Locked Overlay */
             <div className="relative py-40">
               <div className="absolute inset-0 z-20 backdrop-blur-md bg-black/20 flex flex-col items-center justify-center border-t border-white/5">
                 <div className="p-6 bg-white/5 border border-white/10 rounded-[3rem] mb-6 shadow-2xl">
@@ -100,7 +99,6 @@ const LandingPage = ({ isLoggedIn, user, onLogout }) => {
                 </p>
               </div>
 
-              {/* Blurred Background Preview */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 opacity-20 blur-2xl pointer-events-none">
                 {[1, 2, 3].map((i) => (
                   <div key={i} className="h-[450px] bg-white/5 rounded-[4rem] border border-white/10" />
@@ -108,26 +106,25 @@ const LandingPage = ({ isLoggedIn, user, onLogout }) => {
               </div>
             </div>
           ) : (
-            /* Unlocked Bento Grid */
             <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-20 text-left">
               {features.map((feature, index) => {
                 const FeatureIcon = feature.Icon || Icons.HelpCircle;
                 
-                // 1. ADDED "Live Collab" to the list of active features
-                const isActive = ["ChatTutor AI", "Resume Ranker", "Live Collab"].includes(feature.title);
+                // Handled redirection for Content Gen here
+                const isActive = ["ChatTutor AI", "Resume Ranker", "Live Collab", "Content Gen"].includes(feature.title);
                 
-                // 2. Created a dedicated function to handle correct routing
                 const handleNavigation = () => {
                   if (!isActive) return;
                   if (feature.title === "ChatTutor AI") navigate('/chattutor');
                   else if (feature.title === "Resume Ranker") navigate('/resume-ranker');
                   else if (feature.title === "Live Collab") navigate('/live-collab');
+                  else if (feature.title === "Content Gen") navigate('/chattutor'); // Redirects to ChatTutor
                 };
                 
                 return (
                   <motion.div
                     key={index}
-                    onClick={handleNavigation} // 3. Replaced the inline onClick with the new handler
+                    onClick={handleNavigation}
                     initial={{ opacity: 0, y: 50 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
@@ -156,7 +153,6 @@ const LandingPage = ({ isLoggedIn, user, onLogout }) => {
         </div>
       </main>
 
-      {/* Footer - Only visible when logged in to keep the 'Lock' absolute */}
       {isLoggedIn && (
         <footer className="border-t border-white/5 bg-black/40 backdrop-blur-md py-24 relative z-10">
           <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-12">
