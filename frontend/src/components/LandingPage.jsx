@@ -16,6 +16,38 @@ const LandingPage = ({ isLoggedIn, user, onLogout }) => {
     { title: "Resume Ranker", desc: "ATS-optimized scoring system built for modern developers.", Icon: Icons.FileSearch, color: "text-pink-400", delay: 0.2 },
   ];
 
+  // Animation Variants for the Ultra-Smooth Headline
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15,
+        delayChildren: 0.3,
+      }
+    }
+  };
+
+  const itemLeft = {
+    hidden: { x: -150, opacity: 0, filter: "blur(10px)" },
+    visible: { 
+      x: 0, 
+      opacity: 1, 
+      filter: "blur(0px)",
+      transition: { duration: 1.5, ease: [0.22, 1, 0.36, 1] } 
+    }
+  };
+
+  const itemRight = {
+    hidden: { x: 150, opacity: 0, filter: "blur(10px)" },
+    visible: { 
+      x: 0, 
+      opacity: 1, 
+      filter: "blur(0px)",
+      transition: { duration: 1.5, ease: [0.22, 1, 0.36, 1] } 
+    }
+  };
+
   return (
     <div className={`min-h-screen bg-[#050505] text-white selection:bg-purple-500 font-sans ${!isLoggedIn ? 'overflow-hidden max-h-screen' : 'overflow-x-hidden'}`}>
       
@@ -63,26 +95,46 @@ const LandingPage = ({ isLoggedIn, user, onLogout }) => {
 
       {/* Hero Section */}
       <main className="max-w-7xl mx-auto px-6 pt-52 pb-20 relative z-10 text-center">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
+        <motion.div 
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="overflow-hidden"
+        >
+          {/* Headline Collision Animation */}
           <h1 className="text-6xl md:text-[8rem] font-black tracking-tighter leading-[0.85] mb-12 italic">
-            The Future of <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-b from-white via-white to-white/20 block not-italic">Workflow.</span>
-          </h1>
-          <p className="text-gray-500 max-w-2xl mx-auto text-lg md:text-xl font-medium leading-relaxed mb-10">
-            A unified environment for students and HR professionals. <br />
-            7 powerful tools. <span className="text-white">One seamless interface.</span>
-          </p>
-
-          {!isLoggedIn && (
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => navigate('/auth')}
-              className="bg-purple-600 px-8 py-4 rounded-2xl font-black uppercase tracking-widest text-sm shadow-[0_0_40px_rgba(147,51,234,0.3)] hover:bg-purple-500 transition-colors"
+            <motion.span variants={itemLeft} className="block">
+              The Future of
+            </motion.span>
+            <motion.span 
+              variants={itemRight}
+              className="text-transparent bg-clip-text bg-gradient-to-b from-white via-white to-white/20 block not-italic"
             >
-              Initialize System Access
-            </motion.button>
-          )}
+              Workflow.
+            </motion.span>
+          </h1>
+          
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 1 }}
+          >
+            <p className="text-gray-500 max-w-2xl mx-auto text-lg md:text-xl font-medium leading-relaxed mb-10">
+              A unified environment for students and HR professionals. <br />
+              7 powerful tools. <span className="text-white">One seamless interface.</span>
+            </p>
+
+            {!isLoggedIn && (
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => navigate('/auth')}
+                className="bg-purple-600 px-8 py-4 rounded-2xl font-black uppercase tracking-widest text-sm shadow-[0_0_40px_rgba(147,51,234,0.3)] hover:bg-purple-500 transition-colors"
+              >
+                Initialize System Access
+              </motion.button>
+            )}
+          </motion.div>
         </motion.div>
 
         {/* Locked / Bento Section */}
@@ -109,8 +161,6 @@ const LandingPage = ({ isLoggedIn, user, onLogout }) => {
             <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-20 text-left">
               {features.map((feature, index) => {
                 const FeatureIcon = feature.Icon || Icons.HelpCircle;
-                
-                // Handled redirection for Content Gen here
                 const isActive = ["ChatTutor AI", "Resume Ranker", "Live Collab", "Content Gen"].includes(feature.title);
                 
                 const handleNavigation = () => {
@@ -118,7 +168,7 @@ const LandingPage = ({ isLoggedIn, user, onLogout }) => {
                   if (feature.title === "ChatTutor AI") navigate('/chattutor');
                   else if (feature.title === "Resume Ranker") navigate('/resume-ranker');
                   else if (feature.title === "Live Collab") navigate('/live-collab');
-                  else if (feature.title === "Content Gen") navigate('/chattutor'); // Redirects to ChatTutor
+                  else if (feature.title === "Content Gen") navigate('/chattutor');
                 };
                 
                 return (
@@ -153,26 +203,50 @@ const LandingPage = ({ isLoggedIn, user, onLogout }) => {
         </div>
       </main>
 
+      {/* Footer */}
       {isLoggedIn && (
-        <footer className="border-t border-white/5 bg-black/40 backdrop-blur-md py-24 relative z-10">
-          <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-12">
-            <div className="flex flex-col gap-8 md:flex-row md:gap-20">
-              <div className="text-left">
-                <h4 className="text-2xl font-black mb-2 tracking-tighter uppercase italic">Gurleen Kaur</h4>
-                <p className="text-gray-600 text-[10px] font-mono tracking-widest uppercase italic">3rd Year // CU</p>
-              </div>
-              <div className="text-left">
-                <h4 className="text-2xl font-black mb-2 tracking-tighter uppercase italic">Abhinav Garg</h4>
-                <p className="text-gray-600 text-[10px] font-mono tracking-widest uppercase italic">2nd Year // CU</p>
-              </div>
+        <footer className="border-t border-white/5 bg-black/40 backdrop-blur-md py-32 relative z-10 overflow-hidden">
+          <div className="max-w-7xl mx-auto px-6">
+            <div className="flex flex-col md:flex-row justify-between items-center gap-20 relative">
+              
+              <motion.div 
+                initial={{ x: -200, opacity: 0 }}
+                whileInView={{ x: 0, opacity: 1 }}
+                viewport={{ once: false, margin: "-100px" }}
+                transition={{ duration: 1.2, ease: "circOut" }}
+                className="text-center md:text-left group"
+              >
+                <h4 className="text-4xl md:text-6xl font-black mb-2 tracking-tighter uppercase italic bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-500 group-hover:to-purple-500 transition-all duration-500">
+                  Gurleen Kaur
+                </h4>
+                <p className="text-gray-600 text-xs md:text-sm font-mono tracking-[0.5em] uppercase italic ml-1">
+                  2nd Year // CU_DEVELOPER
+                </p>
+              </motion.div>
+
+              <div className="hidden md:block w-[1px] h-24 bg-gradient-to-b from-transparent via-white/10 to-transparent" />
+
+              <motion.div 
+                initial={{ x: 200, opacity: 0 }}
+                whileInView={{ x: 0, opacity: 1 }}
+                viewport={{ once: false, margin: "-100px" }}
+                transition={{ duration: 1.2, ease: "circOut" }}
+                className="text-center md:text-right group"
+              >
+                <h4 className="text-4xl md:text-6xl font-black mb-2 tracking-tighter uppercase italic bg-clip-text text-transparent bg-gradient-to-l from-white to-gray-500 group-hover:to-blue-500 transition-all duration-500">
+                  Abhinav Garg
+                </h4>
+                <p className="text-gray-600 text-xs md:text-sm font-mono tracking-[0.5em] uppercase italic mr-1">
+                  2nd Year // CU_DEVELOPER
+                </p>
+              </motion.div>
+
             </div>
-            <div className="flex gap-4">
-              <div className="p-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/5 text-gray-400 hover:text-white transition-all cursor-pointer">
-                {Icons.Github ? <Icons.Github size={22} /> : <Icons.Globe size={22} />}
-              </div>
-              <div className="p-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/5 text-gray-400 hover:text-white transition-all cursor-pointer">
-                {Icons.Linkedin ? <Icons.Linkedin size={22} /> : <Icons.User size={22} />}
-              </div>
+
+            <div className="mt-20 text-center opacity-20">
+              <p className="text-[10px] font-mono tracking-[1em] uppercase">
+                System_Designed_By_The_Greedy_Gurus // 2026
+              </p>
             </div>
           </div>
         </footer>
