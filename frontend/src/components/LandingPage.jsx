@@ -101,7 +101,6 @@ const LandingPage = ({ isLoggedIn, user, onLogout }) => {
           animate="visible"
           className="overflow-hidden"
         >
-          {/* Headline Collision Animation */}
           <h1 className="text-6xl md:text-[8rem] font-black tracking-tighter leading-[0.85] mb-12 italic">
             <motion.span variants={itemLeft} className="block">
               The Future of
@@ -161,6 +160,8 @@ const LandingPage = ({ isLoggedIn, user, onLogout }) => {
             <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-20 text-left">
               {features.map((feature, index) => {
                 const FeatureIcon = feature.Icon || Icons.HelpCircle;
+                
+                // Unified Active State Logic
                 const isActive = ["ChatTutor AI", "Resume Ranker", "Live Collab", "Content Gen"].includes(feature.title);
                 
                 const handleNavigation = () => {
@@ -168,7 +169,7 @@ const LandingPage = ({ isLoggedIn, user, onLogout }) => {
                   if (feature.title === "ChatTutor AI") navigate('/chattutor');
                   else if (feature.title === "Resume Ranker") navigate('/resume-ranker');
                   else if (feature.title === "Live Collab") navigate('/live-collab');
-                  else if (feature.title === "Content Gen") navigate('/chattutor');
+                  else if (feature.title === "Content Gen") navigate('/chattutor'); // Content Gen redirects to Neural Interface
                 };
                 
                 return (
@@ -240,7 +241,6 @@ const LandingPage = ({ isLoggedIn, user, onLogout }) => {
                   2nd Year // CU_DEVELOPER
                 </p>
               </motion.div>
-
             </div>
 
             <div className="mt-20 text-center opacity-20">

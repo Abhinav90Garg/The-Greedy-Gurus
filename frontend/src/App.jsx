@@ -4,6 +4,7 @@ import LandingPage from './components/LandingPage';
 import ChatTutor from './components/ChatTutor';
 import AuthPage from './components/AuthPage';
 import LiveCollab from './components/LiveCollab';
+import DevMatch from './components/DevMatch';
 
 function App() {
   // 1. Core System States
@@ -40,7 +41,9 @@ function App() {
       */}
 
       <Route path="/live-collab" element={<LiveCollab />} />
-      
+
+      <Route path="/devmatch" element={<DevMatch />} />
+
       <Route 
         path="/" 
         element={
