@@ -5,6 +5,8 @@ import ChatTutor from './components/ChatTutor';
 import AuthPage from './components/AuthPage';
 import LiveCollab from './components/LiveCollab';
 import DevMatch from './components/DevMatch';
+import QuickPoll from './components/QuickPoll';
+import FocusRoom from './components/FocusRoom';
 
 function App() {
   // 1. Core System States
@@ -36,6 +38,22 @@ function App() {
 
   return (
     <Routes>
+<<<<<<< HEAD
+=======
+      {/* CRITICAL: We pass props here so LandingPage knows 
+          whether to show the LOCK or the BENTO CARDS 
+      */}
+
+      <Route path="/live-collab" element={<LiveCollab />} />
+
+      <Route path="/devmatch" element={<DevMatch />} />
+
+      <Route path="/quick-poll" element={<QuickPoll />} />
+
+      <Route path="/focus-room" element={<FocusRoom />} />
+
+
+>>>>>>> 5e9a7fcb8fb2dd53dc3c5f59460b60e8e45720c4
       <Route 
         path="/" 
         element={

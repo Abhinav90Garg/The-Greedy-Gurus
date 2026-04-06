@@ -11,7 +11,6 @@ import io
 from fastapi import FastAPI, HTTPException, UploadFile, File, Form, WebSocket, WebSocketDisconnect # <-- Added WebSocket imports
 
 
-# Load the API key from your .env file
 load_dotenv()
 
 app = FastAPI()
@@ -26,7 +25,7 @@ app.add_middleware(
 
 client = genai.Client()
 
-# Store active Gemini chat sessions: {chat_id: session_object}
+
 chats = {}
 
 class Query(BaseModel):
@@ -64,33 +63,33 @@ def ask(query: Query):
     except Exception as e:
         raise HTTPException(status_code=500, detail="Failed to connect to AI Engine.")
 
-# --- NEW ENDPOINT FOR RESUME UPLOADS ---
+
 @app.post("/upload_resume")
 async def upload_resume(chat_id: str = Form(...), file: UploadFile = File(...)):
     if chat_id not in chats:
         raise HTTPException(status_code=404, detail="Chat ID not found.")
 
     try:
-        # 1. Read the uploaded file into memory
+        
         contents = await file.read()
         extracted_text = ""
 
-        # 2. Extract text if it's a PDF
+    
         if file.filename.lower().endswith(".pdf"):
             reader = PyPDF2.PdfReader(io.BytesIO(contents))
             for page in reader.pages:
                 extracted_text += page.extract_text() + "\n"
         else:
-            # For simplicity, if it's a docx/txt, we decode it raw (you can add docx support later)
+    
             extracted_text = contents.decode('utf-8', errors='ignore')
 
-        # 3. Ensure the AI session is initialized as an ATS scanner
+        
         if chats[chat_id] is None:
             sys_inst = "You are an expert ATS scanner and technical recruiter. Score resumes out of 100, identify missing keywords, and provide actionable feedback."
             config = types.GenerateContentConfig(system_instruction=sys_inst)
             chats[chat_id] = client.chats.create(model='gemini-2.5-flash', config=config)
 
-        # 4. Send the extracted text to Gemini
+        
         prompt = f"Please analyze this uploaded resume. Give it an ATS score out of 100, list missing keywords, and provide brief feedback.\n\nRESUME TEXT:\n{extracted_text}"
         
         response = chats[chat_id].send_message(prompt)
@@ -103,7 +102,7 @@ async def upload_resume(chat_id: str = Form(...), file: UploadFile = File(...)):
     
 class ConnectionManager:
     def __init__(self):
-        # Store all active websocket connections
+        
         self.active_connections: list[WebSocket] = []
 
     async def connect(self, websocket: WebSocket):
@@ -115,7 +114,7 @@ class ConnectionManager:
             self.active_connections.remove(websocket)
 
     async def broadcast(self, message: str, sender: WebSocket):
-        # Send the drawing data to everyone EXCEPT the person who drew it
+    
         for connection in self.active_connections:
             if connection != sender:
                 try:
@@ -130,9 +129,9 @@ async def websocket_endpoint(websocket: WebSocket, room_id: str):
     await manager.connect(websocket)
     try:
         while True:
-            # Wait for drawing data from a frontend client
+    
             data = await websocket.receive_text()
-            # Broadcast it to all other clients in the room
+            
             await manager.broadcast(data, websocket)
     except WebSocketDisconnect:
         manager.disconnect(websocket)
@@ -144,7 +143,7 @@ class DevProfile(BaseModel):
     skills: list[str]
     looking_for: list[str]
 
-# In-memory DB pre-populated with some dummy users so your demo looks good instantly
+
 devmatch_users = {
     "dummy_1": {
         "user_id": "dummy_1", "name": "RAMU", "role": "UI/UX Designer",
@@ -177,20 +176,115 @@ def get_matches(user_id: str):
         if uid == user_id:
             continue
         
-        # Calculate Match Score
+    
         score = 0
-        # What they have that I need
+        
         my_needs_met = set(current_user['looking_for']).intersection(set(user['skills']))
-        # What I have that they need
+        
         their_needs_met = set(user['looking_for']).intersection(set(current_user['skills']))
         
         score += len(my_needs_met) * 40
         score += len(their_needs_met) * 40
         
-        # Add slight randomness to break ties in scoring
+        
         if score > 0:
             matches.append({"user_id": uid, "user": user, "match_percentage": min(score + 10, 99)})
             
-    # Sort highest match first
+    
     matches.sort(key=lambda x: x['match_percentage'], reverse=True)
     return {"matches": matches}
+
+
+class PollCreate(BaseModel):
+    question: str
+    options: list[str]
+
+class VoteCast(BaseModel):
+    poll_id: str
+    option_id: str
+
+
+quickpolls = {
+    "demo_poll_1": {
+        "id": "demo_poll_1",
+        "question": "Which framework should we use for our next hackathon?",
+        "options": [
+            {"id": "opt_1", "text": "React + Vite", "votes": 12},
+            {"id": "opt_2", "text": "Next.js", "votes": 8},
+            {"id": "opt_3", "text": "Vue.js", "votes": 3}
+        ],
+        "total_votes": 23
+    }
+}
+
+@app.post("/quickpoll/create")
+def create_poll(poll: PollCreate):
+    poll_id = "poll_" + str(uuid.uuid4())[:8]
+    
+    
+    valid_options = [opt for opt in poll.options if opt.strip() != ""]
+    
+    quickpolls[poll_id] = {
+        "id": poll_id,
+        "question": poll.question,
+        "options": [{"id": "opt_" + str(uuid.uuid4())[:8], "text": opt, "votes": 0} for opt in valid_options],
+        "total_votes": 0
+    }
+    return {"status": "success", "poll_id": poll_id}
+
+@app.get("/quickpoll/list")
+def list_polls():
+    
+    return {"polls": list(quickpolls.values())[::-1]}
+
+@app.post("/quickpoll/vote")
+def cast_vote(vote: VoteCast):
+    if vote.poll_id not in quickpolls:
+        raise HTTPException(status_code=404, detail="Poll not found")
+    
+    poll = quickpolls[vote.poll_id]
+    for opt in poll["options"]:
+        if opt["id"] == vote.option_id:
+            opt["votes"] += 1
+            poll["total_votes"] += 1
+            return {"status": "success", "poll": poll}
+    
+    raise HTTPException(status_code=404, detail="Option not found")
+
+class FocusSession(BaseModel):
+    user_id: str
+    name: str
+    minutes_focused: int
+
+focus_leaderboard = {
+    "gk_1": {"name": "Gurleen Kaur", "minutes": 150, "rank": "Grandmaster"},
+    "ag_1": {"name": "Abhinav Garg", "minutes": 125, "rank": "Master"},
+    "dummy_1": {"name": "Sarah Chen", "minutes": 45, "rank": "Novice"}
+}
+
+def get_rank(minutes):
+    if minutes >= 100: return "Grandmaster"
+    if minutes >= 50: return "Master"
+    if minutes >= 25: return "Scholar"
+    return "Novice"
+
+@app.post("/focus/log")
+def log_focus_time(session: FocusSession):
+    if session.user_id in focus_leaderboard:
+        focus_leaderboard[session.user_id]["minutes"] += session.minutes_focused
+    else:
+        focus_leaderboard[session.user_id] = {
+            "name": session.name, 
+            "minutes": session.minutes_focused
+        }
+    
+
+    focus_leaderboard[session.user_id]["rank"] = get_rank(focus_leaderboard[session.user_id]["minutes"])
+    
+    return {"status": "success", "total": focus_leaderboard[session.user_id]["minutes"]}
+
+@app.get("/focus/leaderboard")
+def get_leaderboard():
+
+    sorted_leaders = sorted(focus_leaderboard.values(), key=lambda x: x["minutes"], reverse=True)
+    return {"leaderboard": sorted_leaders}

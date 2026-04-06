@@ -160,16 +160,27 @@ const LandingPage = ({ isLoggedIn, user, onLogout }) => {
               {features.map((feature, index) => {
                 const FeatureIcon = feature.Icon || Icons.HelpCircle;
                 
+<<<<<<< HEAD
                 // Redirection Logic including DevMatch
                 const isActive = ["ChatTutor AI", "Resume Ranker", "Live Collab", "Content Gen", "DevMatch"].includes(feature.title);
+=======
+                // 1. Array of currently activated hackathon modules
+                const isActive = ["ChatTutor AI", "Resume Ranker", "Live Collab", "DevMatch", "Quick Poll", "Focus Room"].includes(feature.title);
+>>>>>>> 5e9a7fcb8fb2dd53dc3c5f59460b60e8e45720c4
                 
                 const handleNavigation = () => {
                   if (!isActive) return;
                   if (feature.title === "ChatTutor AI") navigate('/chattutor');
                   else if (feature.title === "Resume Ranker") navigate('/resume-ranker');
                   else if (feature.title === "Live Collab") navigate('/live-collab');
+<<<<<<< HEAD
                   else if (feature.title === "Content Gen") navigate('/chattutor');
                   else if (feature.title === "DevMatch") navigate('/dev-match');
+=======
+                  else if (feature.title === "DevMatch") navigate('/devmatch');
+                  else if (feature.title === "Quick Poll") navigate('/quick-poll');
+                  else if (feature.title === "Focus Room") navigate('/focus-room');
+>>>>>>> 5e9a7fcb8fb2dd53dc3c5f59460b60e8e45720c4
                 };
                 
                 return (
