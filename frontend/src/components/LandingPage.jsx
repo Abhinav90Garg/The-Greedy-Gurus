@@ -33,12 +33,13 @@ const LandingPage = () => {
             </div>
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-500 uppercase font-black">OS</span>
           </div>
-          <button 
-            onClick={() => navigate('/chattutor')} 
-            className="px-6 py-2.5 bg-white text-black rounded-full font-bold text-sm transition-all hover:bg-purple-500 hover:text-white active:scale-95"
-          >
-            Launch Console
-          </button>
+          {/* Updated Navbar Button */}
+<button 
+  onClick={() => navigate('/auth')} 
+  className="px-6 py-2.5 bg-white text-black rounded-full font-bold text-sm transition-all hover:bg-purple-500 hover:text-white active:scale-95 shadow-[0_0_20px_rgba(255,255,255,0.3)]"
+>
+  Get Started
+</button>
         </div>
       </nav>
 
