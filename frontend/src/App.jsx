@@ -2,15 +2,13 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import LandingPage from './components/LandingPage.jsx';
-import Auth from './components/Auth.jsx';
-import ChatTutor from './components/ChatTutor.jsx'; // 1. Import it
+import ChatTutor from './components/ChatTutor.jsx'; // Ensure this file exists!
 
 function App() {
   return (
     <Routes>
       <Route path="/" element={<LandingPage />} />
-      <Route path="/auth" element={<Auth />} />
-      {/* 2. Add the dashboard route */}
+      {/* Route for ChatTutor */}
       <Route path="/dashboard" element={<ChatTutor />} /> 
     </Routes>
   );
