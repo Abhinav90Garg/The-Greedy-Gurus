@@ -40,7 +40,7 @@ const LandingPage = () => {
           
           <p className="text-gray-500 max-w-2xl mx-auto text-lg md:text-xl font-medium leading-relaxed">
             A unified OS environment for students and HR professionals. 
-            7 powerful tools. <span className="text-white">One seamless interface.</span>
+            powerful tools. <span className="text-white">One seamless interface.</span>
           </p>
         </div>
       </main>
