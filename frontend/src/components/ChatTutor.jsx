@@ -13,11 +13,16 @@ const ChatTutor = ({ user }) => {
   const messagesEndRef = useRef(null);
   const fileInputRef = useRef(null);
 
-  // Helper to get initials from the registered name
+  // --- IDENTITY LOGIC FIX ---
+  // If user prop is missing, check localStorage as a backup
+  const activeUser = user || JSON.parse(localStorage.getItem('os_session_user'));
+  const userName = activeUser?.name || "GUEST_ROOT";
+
   const getInitials = (name) => {
-    if (!name) return "OS";
+    if (!name || name === "GUEST_ROOT") return "OS";
     return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
   };
+  // --------------------------
 
   useEffect(() => {
     const currentMode = location.pathname === '/resume-ranker' ? 'resume' : 'chat';
@@ -26,11 +31,11 @@ const ChatTutor = ({ user }) => {
       { 
         role: "bot", 
         text: currentMode === 'resume' 
-          ? "ATS_ANALYZER_READY. Please upload your document for scoring and optimization." 
-          : "SYSTEM_READY. Neural link established. How can I assist your workflow today?" 
+          ? `ATS_ANALYZER_READY. Welcome, ${userName}. Please upload your document.` 
+          : `SYSTEM_READY. Neural link established for ${userName}. How can I assist?` 
       }
     ]);
-  }, [location.pathname]);
+  }, [location.pathname, userName]);
 
   useEffect(() => {
     const API_BASE = "http://127.0.0.1:8000"; 
@@ -105,18 +110,18 @@ const ChatTutor = ({ user }) => {
             </div>
         </div>
 
-        {/* PROFILE SECTION: Registered User Name and Initials */}
+        {/* PROFILE SECTION: Now uses the robust 'userName' variable */}
         <div className="p-6 border-t border-white/5">
           <div className="flex items-center gap-4">
             <div className="w-10 h-10 rounded-full bg-purple-600 flex items-center justify-center font-black text-xs shadow-[0_0_15px_rgba(147,51,234,0.3)]">
-              {getInitials(user?.name)}
+              {getInitials(userName)}
             </div>
             <div>
               <p className="text-xs font-black uppercase italic tracking-wider">
-                {user?.name || "Unauthorized_User"}
+                {userName}
               </p>
               <p className="text-[9px] text-gray-600 font-mono tracking-widest uppercase">
-                {user ? "Session_Active" : "Guest_Mode"} // CU_OS
+                {activeUser ? "Session_Active" : "Guest_Mode"} // CU_OS
               </p>
             </div>
           </div>
