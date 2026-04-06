@@ -1,7 +1,9 @@
 import React from 'react';
 import { 
   Terminal, Cpu, LayoutGrid, Zap, ArrowRight, 
-  Users, Video, BarChart3, FileSearch, Github, Linkedin, Mail 
+  Users, Video, BarChart3, FileSearch, 
+  Github as GitHub, // This aliasing fixes the export error
+  Linkedin, Mail 
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
