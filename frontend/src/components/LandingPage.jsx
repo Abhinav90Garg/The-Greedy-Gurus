@@ -2,7 +2,7 @@ import React from 'react';
 import { Terminal, Cpu, LayoutGrid, Zap, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+
 
 const LandingPage = () => {
   const navigate = useNavigate();
