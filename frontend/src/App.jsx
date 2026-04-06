@@ -9,6 +9,7 @@ function App() {
       <Route path="/" element={<LandingPage />} />
       <Route path="/chattutor" element={<ChatTutor />} />
       <Route path="/dashboard" element={<ChatTutor />} />
+      <Route path="/resume-ranker" element={<ChatTutor />} />
       {/* Fallback to home if route doesn't exist */}
       <Route path="*" element={<LandingPage />} />
     </Routes>

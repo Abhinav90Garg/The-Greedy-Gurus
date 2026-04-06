@@ -18,11 +18,13 @@ const LandingPage = () => {
 
   return (
     <div className="min-h-screen bg-[#050505] text-white selection:bg-purple-500 overflow-x-hidden font-sans">
+      {/* Mesh Gradients */}
       <div className="fixed inset-0 pointer-events-none">
         <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-purple-900/10 blur-[120px] rounded-full" />
         <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-blue-900/10 blur-[120px] rounded-full" />
       </div>
       
+      {/* Navbar */}
       <nav className="fixed top-6 left-1/2 -translate-x-1/2 w-[90%] max-w-5xl z-50">
         <div className="bg-white/[0.03] border border-white/10 backdrop-blur-xl px-6 py-4 rounded-3xl flex justify-between items-center shadow-2xl">
           <div className="flex items-center gap-3 font-bold text-xl tracking-tighter">
@@ -40,6 +42,7 @@ const LandingPage = () => {
         </div>
       </nav>
 
+      {/* Hero Section */}
       <main className="max-w-7xl mx-auto px-6 pt-52 pb-40 relative z-10 text-center">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
           <h1 className="text-6xl md:text-[8rem] font-black tracking-tighter leading-[0.85] mb-12 italic">
@@ -52,14 +55,19 @@ const LandingPage = () => {
           </p>
         </motion.div>
 
+        {/* Bento Grid */}
         <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-60 pb-20 text-left">
           {features.map((feature, index) => {
             const FeatureIcon = feature.Icon || Icons.HelpCircle;
             
+            // LOGIC: Check if card should be active
+            const isActive = feature.title === "ChatTutor AI" || feature.title === "Resume Ranker";
+            
             const handleCardClick = () => {
               if (feature.title === "ChatTutor AI") {
-                // CHANGED: Match the path defined in App.jsx exactly
                 navigate('/chattutor'); 
+              } else if (feature.title === "Resume Ranker") {
+                navigate('/resume-ranker'); 
               }
             };
 
@@ -72,9 +80,9 @@ const LandingPage = () => {
                 viewport={{ once: true }}
                 transition={{ delay: feature.delay, duration: 0.8 }}
                 className={`group relative p-12 h-[450px] rounded-[4rem] border border-white/5 
-                  bg-gradient-to-br from-white/[0.03] to-transparent hover:bg-white/[0.06] 
+                  bg-gradient-to-br from-white/[0.03] to-transparent hover:bg-white/[0.07] 
                   transition-all hover:border-purple-500/40 overflow-hidden flex flex-col justify-between 
-                  ${feature.title === "ChatTutor AI" ? 'cursor-pointer active:scale-[0.98]' : 'cursor-default opacity-60'}`}
+                  ${isActive ? 'cursor-pointer active:scale-[0.98]' : 'cursor-default opacity-60'}`}
               >
                 <div>
                   <div className={`${feature.color} mb-10 inline-block p-4 bg-white/5 rounded-3xl group-hover:scale-110 transition-transform`}>
@@ -89,9 +97,11 @@ const LandingPage = () => {
                 </div>
                 
                 <div className="flex items-center gap-2 text-[10px] font-mono text-gray-700 tracking-widest uppercase group-hover:text-purple-400 transition-colors">
-                  {feature.title === "ChatTutor AI" ? "Initialize_Module" : "Module_Locked"} 
+                  {isActive ? "Initialize_Module" : "Module_Locked"} 
                   <Icons.ChevronRight size={14} />
                 </div>
+
+                {/* Glass Mesh Glow */}
                 <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-purple-500/5 blur-[100px] group-hover:bg-purple-500/20 transition-all rounded-full pointer-events-none" />
               </motion.div>
             );
@@ -99,6 +109,7 @@ const LandingPage = () => {
         </section>
       </main>
 
+      {/* Footer */}
       <footer className="border-t border-white/5 bg-black/40 backdrop-blur-md py-24 relative z-10">
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-12">
           <div className="flex flex-col gap-8 md:flex-row md:gap-20">
