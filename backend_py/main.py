@@ -8,6 +8,8 @@ import os
 from dotenv import load_dotenv
 import PyPDF2
 import io
+from fastapi import FastAPI, HTTPException, UploadFile, File, Form, WebSocket, WebSocketDisconnect # <-- Added WebSocket imports
+
 
 # Load the API key from your .env file
 load_dotenv()
@@ -98,3 +100,39 @@ async def upload_resume(chat_id: str = Form(...), file: UploadFile = File(...)):
     except Exception as e:
         print("UPLOAD ERROR:", str(e))
         raise HTTPException(status_code=500, detail="Failed to process document.")
+    
+class ConnectionManager:
+    def __init__(self):
+        # Store all active websocket connections
+        self.active_connections: list[WebSocket] = []
+
+    async def connect(self, websocket: WebSocket):
+        await websocket.accept()
+        self.active_connections.append(websocket)
+
+    def disconnect(self, websocket: WebSocket):
+        if websocket in self.active_connections:
+            self.active_connections.remove(websocket)
+
+    async def broadcast(self, message: str, sender: WebSocket):
+        # Send the drawing data to everyone EXCEPT the person who drew it
+        for connection in self.active_connections:
+            if connection != sender:
+                try:
+                    await connection.send_text(message)
+                except:
+                    pass
+
+manager = ConnectionManager()
+
+@app.websocket("/ws/{room_id}")
+async def websocket_endpoint(websocket: WebSocket, room_id: str):
+    await manager.connect(websocket)
+    try:
+        while True:
+            # Wait for drawing data from a frontend client
+            data = await websocket.receive_text()
+            # Broadcast it to all other clients in the room
+            await manager.broadcast(data, websocket)
+    except WebSocketDisconnect:
+        manager.disconnect(websocket)

@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import LandingPage from './components/LandingPage';
 import ChatTutor from './components/ChatTutor';
 import AuthPage from './components/AuthPage';
+import LiveCollab from './components/LiveCollab';
 
 function App() {
   // 1. Core System States
@@ -37,6 +38,9 @@ function App() {
       {/* CRITICAL: We pass props here so LandingPage knows 
           whether to show the LOCK or the BENTO CARDS 
       */}
+
+      <Route path="/live-collab" element={<LiveCollab />} />
+      
       <Route 
         path="/" 
         element={

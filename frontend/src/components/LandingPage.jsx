@@ -112,12 +112,22 @@ const LandingPage = ({ isLoggedIn, user, onLogout }) => {
             <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-20 text-left">
               {features.map((feature, index) => {
                 const FeatureIcon = feature.Icon || Icons.HelpCircle;
-                const isActive = feature.title === "ChatTutor AI" || feature.title === "Resume Ranker";
+                
+                // 1. ADDED "Live Collab" to the list of active features
+                const isActive = ["ChatTutor AI", "Resume Ranker", "Live Collab"].includes(feature.title);
+                
+                // 2. Created a dedicated function to handle correct routing
+                const handleNavigation = () => {
+                  if (!isActive) return;
+                  if (feature.title === "ChatTutor AI") navigate('/chattutor');
+                  else if (feature.title === "Resume Ranker") navigate('/resume-ranker');
+                  else if (feature.title === "Live Collab") navigate('/live-collab');
+                };
                 
                 return (
                   <motion.div
                     key={index}
-                    onClick={() => isActive && navigate(feature.title === "ChatTutor AI" ? '/chattutor' : '/resume-ranker')}
+                    onClick={handleNavigation} // 3. Replaced the inline onClick with the new handler
                     initial={{ opacity: 0, y: 50 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
@@ -161,13 +171,13 @@ const LandingPage = ({ isLoggedIn, user, onLogout }) => {
               </div>
             </div>
             <div className="flex gap-4">
-  <div className="p-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/5 text-gray-400 hover:text-white transition-all cursor-pointer">
-    {Icons.Github ? <Icons.Github size={22} /> : <Icons.Globe size={22} />}
-  </div>
-  <div className="p-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/5 text-gray-400 hover:text-white transition-all cursor-pointer">
-    {Icons.Linkedin ? <Icons.Linkedin size={22} /> : <Icons.User size={22} />}
-  </div>
-</div>
+              <div className="p-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/5 text-gray-400 hover:text-white transition-all cursor-pointer">
+                {Icons.Github ? <Icons.Github size={22} /> : <Icons.Globe size={22} />}
+              </div>
+              <div className="p-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/5 text-gray-400 hover:text-white transition-all cursor-pointer">
+                {Icons.Linkedin ? <Icons.Linkedin size={22} /> : <Icons.User size={22} />}
+              </div>
+            </div>
           </div>
         </footer>
       )}
