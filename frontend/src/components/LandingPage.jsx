@@ -16,7 +16,7 @@ const LandingPage = () => {
           <div className="p-2 bg-white/5 rounded-lg border border-white/10 group-hover:border-purple-500/50 transition-colors">
             <Cpu size={20} className="text-purple-500" />
           </div>
-          <span>TOOLKIT_OS</span>
+          <span>OS</span>
         </div>
         <button 
           onClick={() => navigate('/auth')}
@@ -30,10 +30,7 @@ const LandingPage = () => {
       <main className="max-w-7xl mx-auto px-6 pt-32 pb-20 relative z-10 text-center">
   <div className="space-y-12"> {/* Increased vertical spacing between elements */}
     
-    {/* Version Badge */}
-    <div className="inline-block px-4 py-1.5 rounded-full border border-white/10 bg-white/5 text-[10px] font-mono text-purple-400 tracking-[0.2em]">
-      v1.0.4 AVAILABLE_FOR_DEPLOYMENT
-    </div>
+   
     
     {/* Main Heading - The 'leading' fix is here */}
     <h1 className="text-6xl md:text-9xl font-black tracking-tighter leading-[0.85] md:leading-[0.9]">
@@ -45,16 +42,45 @@ const LandingPage = () => {
     
     {/* Subtext */}
     <p className="text-gray-500 max-w-3xl mx-auto text-lg md:text-xl font-medium leading-relaxed px-4">
-      A unified OS environment for students and HR professionals. 
+      A unified environment for students and HR professionals. 
       <br className="hidden md:block" /> 
       powerful tools. <span className="text-white hover:text-purple-400 transition-colors cursor-default">One seamless interface.</span>
     </p>
 
   </div>
+  <div> </div>
+  <section className="max-w-6xl mx-auto px-6 pb-32 grid grid-cols-1 md:grid-cols-3 gap-4">
+  <div className="p-8 rounded-[2rem] bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] transition-all">
+    <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400 mb-6">
+      <Terminal size={20} />
+    </div>
+    <h3 className="font-bold mb-2">ChatTutor AI</h3>
+    <p className="text-sm text-gray-500">Personalized learning with integrated NLP resume screening.</p>
+  </div>
+
+  <div className="p-8 rounded-[2rem] bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] transition-all">
+    <div className="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-400 mb-6">
+      <LayoutGrid size={20} />
+    </div>
+    <h3 className="font-bold mb-2">Focus Room</h3>
+    <p className="text-sm text-gray-500">Minimalist deep-work space with live collaborative whiteboards.</p>
+  </div>
+
+  <div className="p-8 rounded-[2rem] bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] transition-all">
+    <div className="w-10 h-10 rounded-xl bg-green-500/10 flex items-center justify-center text-green-400 mb-6">
+      <Zap size={20} />
+    </div>
+    <h3 className="font-bold mb-2">Content Gen</h3>
+    <p className="text-sm text-gray-500">Instant AI generation for polls, summaries, and resumes.</p>
+  </div>
+</section>
 </main>
     </div>
+    
   );
 };
+
+
 
 export default LandingPage;
 const ToolCard = ({ title, desc, icon: Icon, color }) => (
