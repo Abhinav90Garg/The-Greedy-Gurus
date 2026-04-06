@@ -9,11 +9,11 @@ import QuickPoll from './components/QuickPoll';
 import FocusRoom from './components/FocusRoom';
 
 function App() {
-  // 1. Core System States
+  
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
 
-  // 2. Persistence Logic (Stays logged in even after refresh)
+  
   useEffect(() => {
     const savedUser = localStorage.getItem('os_session_user');
     if (savedUser) {
@@ -22,7 +22,7 @@ function App() {
     }
   }, []);
 
-  // 3. System Handlers
+  
   const handleLogin = (name) => {
     const userData = { name: name };
     localStorage.setItem('os_session_user', JSON.stringify(userData));
@@ -38,7 +38,7 @@ function App() {
 
   return (
     <Routes>
-      {/* Public Routes */}
+      
       <Route 
         path="/" 
         element={
@@ -55,7 +55,7 @@ function App() {
         element={<AuthPage onLogin={handleLogin} />} 
       />
       
-      {/* Protected Routes: Only accessible if logged in */}
+      
       
       <Route 
         path="/dev-match" 
@@ -92,7 +92,7 @@ function App() {
         element={isLoggedIn ? <ChatTutor user={user} /> : <Navigate to="/auth" />} 
       />
       
-      {/* Fallback: Unknown routes go to Landing */}
+      
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

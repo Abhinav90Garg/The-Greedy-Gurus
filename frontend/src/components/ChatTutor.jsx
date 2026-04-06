@@ -14,8 +14,8 @@ const ChatTutor = ({ user }) => {
   const messagesEndRef = useRef(null);
   const fileInputRef = useRef(null);
 
-  // --- IDENTITY LOGIC ---
-  // If user prop is missing, check localStorage as a backup
+  
+  
   const activeUser = user || JSON.parse(localStorage.getItem('os_session_user'));
   const userName = activeUser?.name || "GUEST_ROOT";
 
@@ -104,7 +104,7 @@ const ChatTutor = ({ user }) => {
 
   return (
     <div className="h-screen bg-[#020202] text-white flex font-sans overflow-hidden">
-      {/* SIDEBAR */}
+      
       <aside className="w-80 border-r border-white/5 bg-black/60 backdrop-blur-3xl flex flex-col hidden lg:flex">
         <div className="p-8 border-b border-white/5 space-y-4">
           <button onClick={() => setMode('chat')} className={`w-full py-4 px-6 rounded-2xl flex items-center justify-between transition-all border ${mode === 'chat' ? 'bg-purple-500/10 border-purple-500/30 text-white' : 'bg-white/5 border-white/10 text-gray-500 opacity-50'}`}>
@@ -124,7 +124,7 @@ const ChatTutor = ({ user }) => {
             </div>
         </div>
 
-        {/* PROFILE SECTION */}
+        
         <div className="p-6 border-t border-white/5">
           <div className="flex items-center gap-4">
             <div className="w-10 h-10 rounded-full bg-purple-600 flex items-center justify-center font-black text-xs shadow-[0_0_15px_rgba(147,51,234,0.3)]">
@@ -135,14 +135,14 @@ const ChatTutor = ({ user }) => {
                 {userName}
               </p>
               <p className="text-[9px] text-gray-600 font-mono tracking-widest uppercase">
-                {activeUser ? "Session_Active" : "Guest_Mode"} // CU_OS
+                {activeUser ? "Session_Active" : "Guest_Mode"} 
               </p>
             </div>
           </div>
         </div>
       </aside>
 
-      {/* MAIN AREA */}
+      
       <div className="flex-1 flex flex-col relative">
         <header className="h-20 border-b border-white/5 bg-black/20 backdrop-blur-xl flex items-center px-10 justify-between">
           <div className="flex items-center gap-3">

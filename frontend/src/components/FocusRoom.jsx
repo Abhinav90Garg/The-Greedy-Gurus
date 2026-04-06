@@ -5,18 +5,18 @@ import { motion } from 'framer-motion';
 
 const FocusRoom = () => {
   const navigate = useNavigate();
-  // Using a static ID for the demo to accumulate points
+  
   const [userId] = useState("hacker_" + Math.random().toString(36).substr(2, 5));
   const [userName] = useState("Guest Hacker"); 
   
-  const [timeLeft, setTimeLeft] = useState(25 * 60); // 25 minutes in seconds
+  const [timeLeft, setTimeLeft] = useState(25 * 60); 
   const [isActive, setIsActive] = useState(false);
-  const [mode, setMode] = useState('Pomodoro'); // Pomodoro, Short Break
+  const [mode, setMode] = useState('Pomodoro'); 
   const [leaderboard, setLeaderboard] = useState([]);
   
   const timerRef = useRef(null);
 
-  // Fetch Leaderboard on load
+  
   const fetchLeaderboard = async () => {
     try {
       const res = await fetch("http://127.0.0.1:8000/focus/leaderboard");
@@ -31,7 +31,7 @@ const FocusRoom = () => {
     fetchLeaderboard();
   }, []);
 
-  // Timer Logic
+  
   useEffect(() => {
     if (isActive && timeLeft > 0) {
       timerRef.current = setInterval(() => setTimeLeft((prev) => prev - 1), 1000);
@@ -56,16 +56,16 @@ const FocusRoom = () => {
 
   const handleCompleteSession = async () => {
     setIsActive(false);
-    // Only log time if it was a Pomodoro focus session (not a break)
+    
     if (mode === 'Pomodoro') {
-      const minutesFocused = 25; // Log 25 minutes
+      const minutesFocused = 25; 
       try {
         await fetch("http://127.0.0.1:8000/focus/log", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ user_id: userId, name: userName, minutes_focused: minutesFocused })
         });
-        fetchLeaderboard(); // Refresh leaderboard
+        fetchLeaderboard(); 
       } catch (err) {
         console.error("Failed to log time", err);
       }
@@ -74,7 +74,7 @@ const FocusRoom = () => {
     resetTimer();
   };
 
-  // Format time (MM:SS)
+  
   const formatTime = (seconds) => {
     const m = Math.floor(seconds / 60).toString().padStart(2, '0');
     const s = (seconds % 60).toString().padStart(2, '0');
@@ -83,7 +83,7 @@ const FocusRoom = () => {
 
   return (
     <div className="min-h-screen bg-[#020202] text-white flex flex-col font-sans overflow-hidden">
-      {/* HEADER */}
+      
       <header className="h-20 border-b border-white/5 bg-black/20 backdrop-blur-xl flex items-center px-10 justify-between shrink-0 z-50">
         <div className="flex items-center gap-3">
           <Icons.LayoutGrid size={18} className="text-purple-500" />
@@ -96,9 +96,9 @@ const FocusRoom = () => {
 
       <main className="flex-1 flex flex-col lg:flex-row w-full max-w-7xl mx-auto p-6 gap-6">
         
-        {/* TIMER SECTION */}
+        
         <section className="flex-1 flex flex-col items-center justify-center bg-white/[0.02] border border-white/5 rounded-[3rem] p-10 relative overflow-hidden">
-          {/* Ambient glowing background when active */}
+          
           {isActive && <div className="absolute inset-0 bg-purple-500/10 blur-[100px] animate-pulse"></div>}
           
           <div className="relative z-10 flex gap-4 mb-12 bg-black/50 p-2 rounded-full border border-white/10">
@@ -124,7 +124,7 @@ const FocusRoom = () => {
           </div>
         </section>
 
-        {/* LEADERBOARD SECTION */}
+        
         <aside className="w-full lg:w-[400px] bg-white/[0.02] border border-white/5 rounded-[3rem] p-8 flex flex-col">
           <div className="flex items-center gap-3 mb-8">
             <Icons.Trophy size={24} className="text-yellow-500" />

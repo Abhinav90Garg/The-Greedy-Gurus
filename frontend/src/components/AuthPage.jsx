@@ -15,26 +15,26 @@ const AuthPage = ({ onLogin }) => {
     setEmailInput("");
   };
 
-  // Logic to handle the "Unlock"
+  
   const handleSystemAccess = () => {
-    // 1. Determine Display Name
+    
     const displayName = nameInput.trim() 
       || (emailInput ? emailInput.split('@')[0].toUpperCase() : "GUEST_ROOT");
 
     console.log("System Access Granted for:", displayName);
 
-    // 2. Trigger the state in App.jsx (The Unlock)
+    
     if (onLogin) {
       onLogin(displayName); 
     }
     
-    // 3. Force redirect to Home
+    
     navigate('/');
   };
 
   return (
     <div className="min-h-screen bg-[#050505] text-white flex items-center justify-center p-6 relative overflow-hidden font-sans">
-      {/* Background Mesh */}
+      
       <div className="fixed inset-0 pointer-events-none">
         <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-purple-900/20 blur-[120px] rounded-full animate-pulse" />
         <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-blue-900/20 blur-[120px] rounded-full animate-pulse" />
@@ -68,7 +68,7 @@ const AuthPage = ({ onLogin }) => {
                 {isLogin ? 'Initialize your session.' : 'Register new core identity.'}
               </p>
 
-              {/* Note: Removed 'onSubmit' from form and put 'onClick' on button for MVP stability */}
+              
               <div className="space-y-4">
                 {!isLogin && (
                   <div className="relative group">

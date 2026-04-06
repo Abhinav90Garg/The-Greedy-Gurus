@@ -8,7 +8,7 @@ import os
 from dotenv import load_dotenv
 import PyPDF2
 import io
-from fastapi import FastAPI, HTTPException, UploadFile, File, Form, WebSocket, WebSocketDisconnect # <-- Added WebSocket imports
+from fastapi import FastAPI, HTTPException, UploadFile, File, Form, WebSocket, WebSocketDisconnect 
 
 
 load_dotenv()
@@ -259,7 +259,7 @@ class FocusSession(BaseModel):
 focus_leaderboard = {
     "gk_1": {"name": "Gurleen Kaur", "minutes": 150, "rank": "Grandmaster"},
     "ag_1": {"name": "Abhinav Garg", "minutes": 125, "rank": "Master"},
-    "dummy_1": {"name": "Sarah Chen", "minutes": 45, "rank": "Novice"}
+    "dummy_1": {"name": "XYZ", "minutes": 45, "rank": "Novice"}
 }
 
 def get_rank(minutes):

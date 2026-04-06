@@ -6,18 +6,18 @@ import { motion, AnimatePresence } from 'framer-motion';
 const QuickPoll = () => {
   const navigate = useNavigate();
   const [polls, setPolls] = useState([]);
-  const [view, setView] = useState('list'); // 'list' or 'create'
+  const [view, setView] = useState('list'); 
   
-  // Anti-Spam: Track voted polls in LocalStorage
+  
   const [votedPolls, setVotedPolls] = useState(() => {
     return JSON.parse(localStorage.getItem('votedPolls')) || {};
   });
 
-  // Create Form State
+  
   const [question, setQuestion] = useState("");
   const [options, setOptions] = useState(["", ""]);
 
-  // Fetch polls periodically for "Live" effect
+  
   const fetchPolls = async () => {
     try {
       const res = await fetch("http://127.0.0.1:8000/quickpoll/list");
@@ -30,14 +30,14 @@ const QuickPoll = () => {
 
   useEffect(() => {
     fetchPolls();
-    const interval = setInterval(fetchPolls, 2000); // Live sync every 2 seconds
+    const interval = setInterval(fetchPolls, 2000); 
     return () => clearInterval(interval);
   }, []);
 
   const handleVote = async (pollId, optionId) => {
-    if (votedPolls[pollId]) return; // Prevent double voting
+    if (votedPolls[pollId]) return; 
     
-    // Optimistic UI update
+    
     const newVoted = { ...votedPolls, [pollId]: optionId };
     setVotedPolls(newVoted);
     localStorage.setItem('votedPolls', JSON.stringify(newVoted));
@@ -48,7 +48,7 @@ const QuickPoll = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ poll_id: pollId, option_id: optionId })
       });
-      fetchPolls(); // Refresh instantly
+      fetchPolls(); 
     } catch (err) {
       console.error("Vote failed", err);
     }
@@ -73,7 +73,7 @@ const QuickPoll = () => {
 
   return (
     <div className="min-h-screen bg-[#020202] text-white flex flex-col font-sans overflow-y-auto">
-      {/* HEADER */}
+      
       <header className="h-20 border-b border-white/5 bg-black/20 backdrop-blur-xl flex items-center px-10 justify-between shrink-0 sticky top-0 z-50">
         <div className="flex items-center gap-3">
           <Icons.BarChart3 size={18} className="text-yellow-500" />
@@ -86,7 +86,7 @@ const QuickPoll = () => {
 
       <main className="flex-1 max-w-4xl mx-auto w-full p-10 flex flex-col">
         
-        {/* Navigation Tabs */}
+        
         <div className="flex justify-center mb-10 gap-4">
           <button onClick={() => setView('list')} className={`px-8 py-3 rounded-2xl font-black uppercase tracking-widest text-xs transition-all border ${view === 'list' ? 'bg-yellow-500/10 border-yellow-500/50 text-yellow-400' : 'bg-white/5 border-white/10 text-gray-500 hover:text-white'}`}>
             Live Data Board
@@ -98,7 +98,7 @@ const QuickPoll = () => {
 
         <AnimatePresence mode="wait">
           {view === 'create' ? (
-            /* CREATE POLL FORM */
+            
             <motion.form key="create" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} onSubmit={handleCreatePoll} className="w-full bg-white/[0.02] border border-white/10 p-10 rounded-[3rem] shadow-2xl">
               <div className="mb-8">
                 <label className="block text-xs font-mono tracking-widest text-gray-500 uppercase mb-3">Target Query</label>
@@ -132,7 +132,7 @@ const QuickPoll = () => {
               </button>
             </motion.form>
           ) : (
-            /* POLLS LIST / LIVE CHARTS */
+            
             <motion.div key="list" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="w-full space-y-8">
               {polls.length === 0 ? (
                  <p className="text-center text-gray-500 mt-20 font-mono tracking-widest uppercase">No active telemetry found.</p>
@@ -160,7 +160,7 @@ const QuickPoll = () => {
                                   : 'border-white/10 bg-white/5 hover:border-yellow-500/50 hover:bg-white/10'
                               }`}
                             >
-                              {/* Live Chart Progress Bar */}
+                              
                               {hasVoted && (
                                 <motion.div 
                                   initial={{ width: 0 }} animate={{ width: `${percentage}%` }} transition={{ duration: 0.5, ease: "easeOut" }}

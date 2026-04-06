@@ -5,13 +5,13 @@ import { motion } from 'framer-motion';
 
 const DevMatch = () => {
   const navigate = useNavigate();
-  // Simple session mock for hackathon purposes
+  
   const [userId] = useState(() => "user_" + Math.random().toString(36).substr(2, 9)); 
   const [hasProfile, setHasProfile] = useState(false);
   const [matches, setMatches] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // Profile Form State
+  
   const [formData, setFormData] = useState({
     name: '', role: 'Frontend Developer', skills: '', lookingFor: ''
   });
@@ -56,7 +56,7 @@ const DevMatch = () => {
 
   return (
     <div className="min-h-screen bg-[#020202] text-white flex flex-col font-sans overflow-y-auto">
-      {/* HEADER */}
+      
       <header className="h-20 border-b border-white/5 bg-black/20 backdrop-blur-xl flex items-center px-10 justify-between shrink-0 sticky top-0 z-50">
         <div className="flex items-center gap-3">
           <Icons.Users size={18} className="text-orange-500" />
@@ -70,9 +70,7 @@ const DevMatch = () => {
       <main className="flex-1 max-w-5xl mx-auto w-full p-10 flex flex-col items-center justify-center">
         
         {!hasProfile ? (
-          /* ==================================
-             PHASE 1: PROFILE CREATION
-          ================================== */
+          
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-md">
             <div className="text-center mb-10">
               <div className="w-20 h-20 bg-orange-500/10 border border-orange-500/30 rounded-full flex items-center justify-center mx-auto mb-6 text-orange-400">
@@ -112,9 +110,7 @@ const DevMatch = () => {
             </form>
           </motion.div>
         ) : (
-          /* ==================================
-             PHASE 2: MATCHING DASHBOARD
-          ================================== */
+          
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="w-full">
             <div className="flex items-center justify-between mb-12">
               <div>

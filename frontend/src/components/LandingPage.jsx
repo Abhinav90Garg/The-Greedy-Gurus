@@ -16,7 +16,7 @@ const LandingPage = ({ isLoggedIn, user, onLogout }) => {
     { title: "Resume Ranker", desc: "ATS-optimized scoring system built for modern developers.", Icon: Icons.FileSearch, color: "text-pink-400", delay: 0.2 },
   ];
 
-  // Animation Variants for the Ultra-Smooth Headline
+  
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -51,13 +51,13 @@ const LandingPage = ({ isLoggedIn, user, onLogout }) => {
   return (
     <div className={`min-h-screen bg-[#050505] text-white selection:bg-purple-500 font-sans ${!isLoggedIn ? 'overflow-hidden max-h-screen' : 'overflow-x-hidden'}`}>
       
-      {/* Mesh Gradients */}
+      
       <div className="fixed inset-0 pointer-events-none">
         <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-purple-900/10 blur-[120px] rounded-full" />
         <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-blue-900/10 blur-[120px] rounded-full" />
       </div>
       
-      {/* Navbar */}
+      
       <nav className="fixed top-6 left-1/2 -translate-x-1/2 w-[90%] max-w-5xl z-50">
         <div className="bg-white/[0.03] border border-white/10 backdrop-blur-xl px-6 py-4 rounded-3xl flex justify-between items-center shadow-2xl">
           <div className="flex items-center gap-3 font-bold text-xl tracking-tighter cursor-pointer" onClick={() => navigate('/')}>
@@ -93,7 +93,7 @@ const LandingPage = ({ isLoggedIn, user, onLogout }) => {
         </div>
       </nav>
 
-      {/* Hero Section */}
+      
       <main className="max-w-7xl mx-auto px-6 pt-52 pb-20 relative z-10 text-center">
         <motion.div 
           variants={containerVariants}
@@ -119,7 +119,7 @@ const LandingPage = ({ isLoggedIn, user, onLogout }) => {
             transition={{ duration: 1, delay: 1 }}
           >
             <p className="text-gray-500 max-w-2xl mx-auto text-lg md:text-xl font-medium leading-relaxed mb-10">
-              A unified environment for students and HR professionals. <br />
+              A unified environment for students . <br />
               7 powerful tools. <span className="text-white">One seamless interface.</span>
             </p>
 
@@ -136,7 +136,7 @@ const LandingPage = ({ isLoggedIn, user, onLogout }) => {
           </motion.div>
         </motion.div>
 
-        {/* Locked / Bento Section */}
+        
         <div className="relative mt-60">
           {!isLoggedIn ? (
             <div className="relative py-40">
@@ -161,7 +161,7 @@ const LandingPage = ({ isLoggedIn, user, onLogout }) => {
               {features.map((feature, index) => {
                 const FeatureIcon = feature.Icon || Icons.HelpCircle;
                 
-                // Unified Active State Logic
+                
                 const isActive = ["ChatTutor AI", "Resume Ranker", "Live Collab", "Content Gen", "DevMatch", "Quick Poll", "Focus Room"].includes(feature.title);
                 
                 const handleNavigation = () => {
@@ -207,7 +207,7 @@ const LandingPage = ({ isLoggedIn, user, onLogout }) => {
         </div>
       </main>
 
-      {/* Footer */}
+      
       {isLoggedIn && (
         <footer className="border-t border-white/5 bg-black/40 backdrop-blur-md py-32 relative z-10 overflow-hidden">
           <div className="max-w-7xl mx-auto px-6">
@@ -224,7 +224,7 @@ const LandingPage = ({ isLoggedIn, user, onLogout }) => {
                   Gurleen Kaur
                 </h4>
                 <p className="text-gray-600 text-xs md:text-sm font-mono tracking-[0.5em] uppercase italic ml-1">
-                  2nd Year // CU_DEVELOPER
+                  2nd Year 
                 </p>
               </motion.div>
 
@@ -241,14 +241,14 @@ const LandingPage = ({ isLoggedIn, user, onLogout }) => {
                   Abhinav Garg
                 </h4>
                 <p className="text-gray-600 text-xs md:text-sm font-mono tracking-[0.5em] uppercase italic mr-1">
-                  2nd Year // CU_DEVELOPER
+                  2nd Year 
                 </p>
               </motion.div>
             </div>
 
             <div className="mt-20 text-center opacity-20">
               <p className="text-[10px] font-mono tracking-[1em] uppercase">
-                System_Designed_By_The_Greedy_Gurus // 2026
+                System_Designed_By_The_Greedy_Gurus 
               </p>
             </div>
           </div>
