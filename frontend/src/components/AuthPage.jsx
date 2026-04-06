@@ -11,38 +11,27 @@ const AuthPage = ({ onLogin }) => {
 
   const toggleAuth = () => {
     setIsLogin(!isLogin);
-    setNameInput(""); // Clear inputs on toggle
+    setNameInput(""); 
+    setEmailInput("");
   };
 
   const handleAuthSubmit = (e) => {
-  e.preventDefault();
-  
-  // 1. Capture the name (or fallback)
-  const finalName = nameInput.trim() || "DEV_ROOT";
-
-  // 2. Call the prop passed from App.jsx
-  // This is the "Magic Key" that unlocks the Bento Grid
-  onLogin(finalName); 
-  
-  // 3. Send them back to the Home page
-  navigate('/');
-};
+    e.preventDefault();
     
-    // Logic: Use the name provided, or extract from email, or fallback
+    // Logic: Use Name Input, or extract from Email, or default
     const displayName = nameInput.trim() 
-      || emailInput.split('@')[0].toUpperCase() 
-      || "GUEST_ROOT";
+      || (emailInput ? emailInput.split('@')[0].toUpperCase() : "GUEST_ROOT");
 
-    // Trigger the global login state in App.jsx
+    // This triggers the state in App.jsx to unlock the landing page
     onLogin(displayName); 
     
-    // Redirect to landing page which will now be unlocked
+    // Immediate redirect to the unlocked landing page
     navigate('/');
   };
 
   return (
     <div className="min-h-screen bg-[#050505] text-white flex items-center justify-center p-6 relative overflow-hidden font-sans">
-      {/* Background Blobs (Same theme as Landing) */}
+      {/* Background Mesh Glows */}
       <div className="fixed inset-0 pointer-events-none">
         <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-purple-900/20 blur-[120px] rounded-full animate-pulse" />
         <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-blue-900/20 blur-[120px] rounded-full animate-pulse" />
@@ -53,7 +42,7 @@ const AuthPage = ({ onLogin }) => {
         animate={{ opacity: 1, scale: 1 }}
         className="w-full max-w-md z-10"
       >
-        {/* Brand Header */}
+        {/* Logo / Brand */}
         <div 
           onClick={() => navigate('/')}
           className="flex items-center justify-center gap-3 mb-10 cursor-pointer group"
@@ -64,9 +53,8 @@ const AuthPage = ({ onLogin }) => {
           <span className="text-3xl font-black italic tracking-tighter uppercase">OS</span>
         </div>
 
-        {/* Glass Card */}
+        {/* Auth Card */}
         <div className="bg-white/[0.03] border border-white/10 backdrop-blur-2xl rounded-[2.5rem] p-8 md:p-12 shadow-2xl relative overflow-hidden">
-          
           <AnimatePresence mode="wait">
             <motion.div
               key={isLogin ? 'login' : 'signup'}
@@ -131,7 +119,6 @@ const AuthPage = ({ onLogin }) => {
             </motion.div>
           </AnimatePresence>
 
-          {/* Toggle Link */}
           <div className="mt-8 text-center">
             <button 
               onClick={toggleAuth}
@@ -141,11 +128,10 @@ const AuthPage = ({ onLogin }) => {
             </button>
           </div>
 
-          {/* Decorative Corner Glow */}
           <div className="absolute -top-10 -right-10 w-32 h-32 bg-purple-500/10 blur-[50px] rounded-full" />
         </div>
 
-        {/* Back Button */}
+        {/* Navigation Footer */}
         <button 
           onClick={() => navigate('/')}
           className="mt-8 flex items-center gap-2 text-gray-600 hover:text-purple-400 transition-colors mx-auto font-mono text-[10px] tracking-widest uppercase"
