@@ -1,19 +1,26 @@
-from fastapi import FastAPI, HTTPException, UploadFile, File, Form
+from fastapi import FastAPI, HTTPException, UploadFile, File, Form, WebSocket, WebSocketDisconnect
 from pydantic import BaseModel
 import uuid
 from fastapi.middleware.cors import CORSMiddleware
 from google import genai
 from google.genai import types
 import os
+from pathlib import Path
 from dotenv import load_dotenv
 import PyPDF2
 import io
-from fastapi import FastAPI, HTTPException, UploadFile, File, Form, WebSocket, WebSocketDisconnect 
 
+# Load environment variables from the backend_py/.env file explicitly
+dotenv_path = Path(__file__).resolve().parent / '.env'
+load_dotenv(dotenv_path=dotenv_path)
 
-load_dotenv()
+GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
+if not GEMINI_API_KEY:
+    raise RuntimeError('Missing GEMINI_API_KEY in backend_py/.env')
 
 app = FastAPI()
+
+client = genai.Client(api_key=GEMINI_API_KEY)
 
 app.add_middleware(
     CORSMiddleware,
@@ -22,9 +29,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-client = genai.Client()
-
 
 chats = {}
 
@@ -61,6 +65,7 @@ def ask(query: Query):
         response = chats[query.chat_id].send_message(query.question)
         return {"answer": response.text}
     except Exception as e:
+        print("ASK ERROR:", str(e))
         raise HTTPException(status_code=500, detail="Failed to connect to AI Engine.")
 
 

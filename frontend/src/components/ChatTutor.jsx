@@ -14,8 +14,6 @@ const ChatTutor = ({ user }) => {
   const messagesEndRef = useRef(null);
   const fileInputRef = useRef(null);
 
-  
-  
   const activeUser = user || JSON.parse(localStorage.getItem('os_session_user'));
   const userName = activeUser?.name || "GUEST_ROOT";
 
@@ -24,6 +22,7 @@ const ChatTutor = ({ user }) => {
     return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
   };
 
+  // 1. Initialize Mode and Welcome Message
   useEffect(() => {
     const currentMode = location.pathname === '/resume-ranker' ? 'resume' : 'chat';
     setMode(currentMode);
@@ -37,12 +36,21 @@ const ChatTutor = ({ user }) => {
     ]);
   }, [location.pathname, userName]);
 
+  // 2. Perform Handshake (Crucial for preventing 404s)
+  const performHandshake = async () => {
+    try {
+      const res = await fetch("http://127.0.0.1:8000/new_chat", { method: "POST" });
+      const data = await res.json();
+      setChatId(data.chat_id);
+      return data.chat_id;
+    } catch (err) {
+      console.error("Handshake Failed:", err);
+      return null;
+    }
+  };
+
   useEffect(() => {
-    const API_BASE = "http://127.0.0.1:8000"; 
-    fetch(`${API_BASE}/new_chat`, { method: "POST" })
-      .then((res) => res.json())
-      .then((data) => setChatId(data.chat_id))
-      .catch(err => console.error("Handshake Failed:", err));
+    performHandshake();
   }, []);
 
   const scrollToBottom = () => {
@@ -53,8 +61,17 @@ const ChatTutor = ({ user }) => {
     scrollToBottom();
   }, [messages, loading]);
 
+  // 3. Optimized Send Message
   const sendMessage = async () => {
     if (!message.trim() || loading) return;
+
+    // Safety: If backend restarted and chatId is gone, re-handshake
+    let activeId = chatId;
+    if (!activeId) {
+      activeId = await performHandshake();
+      if (!activeId) return;
+    }
+
     const currentInput = message;
     setMessages((prev) => [...prev, { role: "user", text: currentInput }]);
     setMessage("");
@@ -64,10 +81,22 @@ const ChatTutor = ({ user }) => {
       const res = await fetch("http://127.0.0.1:8000/ask", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ chat_id: chatId, question: currentInput, feature_type: mode }),
+        body: JSON.stringify({ 
+            chat_id: activeId, 
+            question: currentInput, 
+            feature_type: mode 
+        }),
       });
+      
       const data = await res.json();
-      setMessages((prev) => [...prev, { role: "bot", text: data.answer }]);
+      
+      if (res.status === 404) {
+          // If session expired, re-sync once
+          const newId = await performHandshake();
+          setMessages(prev => [...prev, { role: "bot", text: "SYSTEM_REBOOT: Session was lost. Connection re-established. Please resend your last message." }]);
+      } else {
+          setMessages((prev) => [...prev, { role: "bot", text: data.answer || "SYSTEM_IDLE: No response from core." }]);
+      }
     } catch (error) {
       setMessages((prev) => [...prev, { role: "bot", text: "ERROR: Connection to Neural Engine lost." }]);
     } finally {
@@ -79,12 +108,17 @@ const ChatTutor = ({ user }) => {
     const file = e.target.files[0];
     if (!file) return;
 
+    let activeId = chatId;
+    if (!activeId) {
+        activeId = await performHandshake();
+    }
+
     setMessages(prev => [...prev, { role: "user", text: `[FILE UPLOADED]: ${file.name}` }]);
     setLoading(true);
 
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("chat_id", chatId);
+    formData.append("chat_id", activeId);
 
     try {
       const res = await fetch("http://127.0.0.1:8000/upload_resume", { method: "POST", body: formData });
@@ -124,14 +158,13 @@ const ChatTutor = ({ user }) => {
             </div>
         </div>
 
-        
         <div className="p-6 border-t border-white/5">
           <div className="flex items-center gap-4">
             <div className="w-10 h-10 rounded-full bg-purple-600 flex items-center justify-center font-black text-xs shadow-[0_0_15px_rgba(147,51,234,0.3)]">
               {getInitials(userName)}
             </div>
             <div>
-              <p className="text-xs font-black uppercase italic tracking-wider">
+              <p className="text-xs font-black uppercase italic tracking-wider truncate w-40">
                 {userName}
               </p>
               <p className="text-[9px] text-gray-600 font-mono tracking-widest uppercase">
@@ -142,7 +175,6 @@ const ChatTutor = ({ user }) => {
         </div>
       </aside>
 
-      
       <div className="flex-1 flex flex-col relative">
         <header className="h-20 border-b border-white/5 bg-black/20 backdrop-blur-xl flex items-center px-10 justify-between">
           <div className="flex items-center gap-3">
