@@ -3,7 +3,7 @@ import * as Icons from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLocation } from 'react-router-dom';
 
-const ChatTutor = () => {
+const ChatTutor = ({ user }) => {
   const location = useLocation();
   const [mode, setMode] = useState(location.pathname === '/resume-ranker' ? 'resume' : 'chat');
   const [chatId, setChatId] = useState("");
@@ -13,7 +13,12 @@ const ChatTutor = () => {
   const messagesEndRef = useRef(null);
   const fileInputRef = useRef(null);
 
-  // Sync mode with URL if user navigates via browser buttons
+  // Helper to get initials from the registered name
+  const getInitials = (name) => {
+    if (!name) return "OS";
+    return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+  };
+
   useEffect(() => {
     const currentMode = location.pathname === '/resume-ranker' ? 'resume' : 'chat';
     setMode(currentMode);
@@ -100,12 +105,19 @@ const ChatTutor = () => {
             </div>
         </div>
 
+        {/* PROFILE SECTION: Registered User Name and Initials */}
         <div className="p-6 border-t border-white/5">
           <div className="flex items-center gap-4">
-            <div className="w-10 h-10 rounded-full bg-purple-600 flex items-center justify-center font-black text-xs">GK</div>
+            <div className="w-10 h-10 rounded-full bg-purple-600 flex items-center justify-center font-black text-xs shadow-[0_0_15px_rgba(147,51,234,0.3)]">
+              {getInitials(user?.name)}
+            </div>
             <div>
-              <p className="text-xs font-black uppercase italic">Gurleen Kaur</p>
-              <p className="text-[9px] text-gray-600 font-mono tracking-widest">3rd Year // CU_DEV</p>
+              <p className="text-xs font-black uppercase italic tracking-wider">
+                {user?.name || "Unauthorized_User"}
+              </p>
+              <p className="text-[9px] text-gray-600 font-mono tracking-widest uppercase">
+                {user ? "Session_Active" : "Guest_Mode"} // CU_OS
+              </p>
             </div>
           </div>
         </div>
@@ -140,7 +152,6 @@ const ChatTutor = () => {
               </motion.div>
             )}
 
-            {/* Chat Messages */}
             {messages.map((msg, i) => (
               <motion.div
                 key={i}
@@ -161,7 +172,6 @@ const ChatTutor = () => {
               </motion.div>
             ))}
 
-            {/* LOADING INDICATOR */}
             {loading && (
               <motion.div 
                 initial={{ opacity: 0, y: 10 }}
@@ -179,7 +189,6 @@ const ChatTutor = () => {
                 </div>
               </motion.div>
             )}
-
             <div ref={messagesEndRef} />
           </div>
         </main>
