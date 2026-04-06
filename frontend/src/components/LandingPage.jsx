@@ -113,21 +113,22 @@ const LandingPage = ({ isLoggedIn, user, onLogout }) => {
               {features.map((feature, index) => {
                 const FeatureIcon = feature.Icon || Icons.HelpCircle;
                 
-                // 1. ADDED "Live Collab" to the list of active features
-                const isActive = ["ChatTutor AI", "Resume Ranker", "Live Collab"].includes(feature.title);
+                // 1. Array of currently activated hackathon modules
+                const isActive = ["ChatTutor AI", "Resume Ranker", "Live Collab", "DevMatch"].includes(feature.title);
                 
-                // 2. Created a dedicated function to handle correct routing
+                // 2. Routing logic for all modules
                 const handleNavigation = () => {
                   if (!isActive) return;
                   if (feature.title === "ChatTutor AI") navigate('/chattutor');
                   else if (feature.title === "Resume Ranker") navigate('/resume-ranker');
                   else if (feature.title === "Live Collab") navigate('/live-collab');
+                  else if (feature.title === "DevMatch") navigate('/devmatch');
                 };
                 
                 return (
                   <motion.div
                     key={index}
-                    onClick={handleNavigation} // 3. Replaced the inline onClick with the new handler
+                    onClick={handleNavigation}
                     initial={{ opacity: 0, y: 50 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}

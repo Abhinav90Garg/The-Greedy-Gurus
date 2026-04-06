@@ -136,3 +136,61 @@ async def websocket_endpoint(websocket: WebSocket, room_id: str):
             await manager.broadcast(data, websocket)
     except WebSocketDisconnect:
         manager.disconnect(websocket)
+
+class DevProfile(BaseModel):
+    user_id: str
+    name: str
+    role: str
+    skills: list[str]
+    looking_for: list[str]
+
+# In-memory DB pre-populated with some dummy users so your demo looks good instantly
+devmatch_users = {
+    "dummy_1": {
+        "user_id": "dummy_1", "name": "RAMU", "role": "UI/UX Designer",
+        "skills": ["Figma", "Tailwind", "React"], "looking_for": ["Python", "FastAPI", "Node"]
+    },
+    "dummy_2": {
+        "user_id": "dummy_2", "name": "SHAMU", "role": "Backend Engineer",
+        "skills": ["Python", "Django", "PostgreSQL"], "looking_for": ["React", "Next.js", "Figma"]
+    },
+    "dummy_3": {
+        "user_id": "dummy_3", "name": "RAVI", "role": "Fullstack Ninja",
+        "skills": ["Node", "React", "MongoDB"], "looking_for": ["UI/UX", "Marketing", "Figma"]
+    }
+}
+
+@app.post("/devmatch/profile")
+def create_profile(profile: DevProfile):
+    devmatch_users[profile.user_id] = profile.dict()
+    return {"status": "success", "message": "Profile synced to mainframe."}
+
+@app.get("/devmatch/match/{user_id}")
+def get_matches(user_id: str):
+    if user_id not in devmatch_users:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    current_user = devmatch_users[user_id]
+    matches = []
+    
+    for uid, user in devmatch_users.items():
+        if uid == user_id:
+            continue
+        
+        # Calculate Match Score
+        score = 0
+        # What they have that I need
+        my_needs_met = set(current_user['looking_for']).intersection(set(user['skills']))
+        # What I have that they need
+        their_needs_met = set(user['looking_for']).intersection(set(current_user['skills']))
+        
+        score += len(my_needs_met) * 40
+        score += len(their_needs_met) * 40
+        
+        # Add slight randomness to break ties in scoring
+        if score > 0:
+            matches.append({"user_id": uid, "user": user, "match_percentage": min(score + 10, 99)})
+            
+    # Sort highest match first
+    matches.sort(key=lambda x: x['match_percentage'], reverse=True)
+    return {"matches": matches}
