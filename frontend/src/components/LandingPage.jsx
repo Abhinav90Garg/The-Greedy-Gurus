@@ -18,7 +18,7 @@ const LandingPage = () => {
           <div className="p-2 bg-white/5 rounded-lg border border-white/10">
             <Cpu size={20} className="text-purple-500" />
           </div>
-          <span>TOOLKIT_OS</span>
+          <span>OS</span>
         </div>
         <button 
           onClick={() => navigate('/auth')}
