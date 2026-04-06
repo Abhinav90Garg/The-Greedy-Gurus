@@ -84,12 +84,18 @@ const ChatTutor = () => {
               </div>
             </div>
           ))}
-          {loading && (
-            <div className="flex gap-4 animate-pulse">
-              <div className="w-8 h-8 rounded-lg bg-white/5 border border-white/10" />
-              <div className="bg-white/5 h-10 w-32 rounded-2xl border border-white/5" />
-            </div>
-          )}
+         {loading && (
+  <div className="flex gap-4 animate-in fade-in duration-500">
+    <div className="w-8 h-8 rounded-lg bg-purple-600/20 border border-purple-500/30 flex items-center justify-center">
+      <div className="w-4 h-4 bg-purple-400 rounded-full animate-ping" />
+    </div>
+    <div className="bg-white/5 border border-white/5 p-4 rounded-2xl rounded-tl-none flex gap-1">
+      <span className="w-1.5 h-1.5 bg-gray-600 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
+      <span className="w-1.5 h-1.5 bg-gray-600 rounded-full animate-bounce [animation-delay:-0.15s]"></span>
+      <span className="w-1.5 h-1.5 bg-gray-600 rounded-full animate-bounce"></span>
+    </div>
+  </div>
+)}
         </div>
 
         <div className="p-8">

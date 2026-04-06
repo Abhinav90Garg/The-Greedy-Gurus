@@ -14,12 +14,28 @@ const LandingPage = () => {
       <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-900/20 blur-[120px] rounded-full pointer-events-none" />
       
       {/* Navbar */}
-      <button 
-      onClick={() => navigate('/dashboard')} // Change /auth to /dashboard
-      className="bg-white text-black px-6 py-2.5 rounded-full font-bold hover:bg-purple-500 hover:text-white transition-all"
+      {/* Replace your current nav with this centered, floating navbar */}
+<nav className="fixed top-6 left-1/2 -translate-x-1/2 w-[90%] max-w-5xl z-50">
+  <div className="bg-white/[0.03] border border-white/10 backdrop-blur-xl px-6 py-4 rounded-3xl flex justify-between items-center shadow-2xl">
+    <div className="flex items-center gap-3 font-bold text-xl tracking-tighter">
+      <div className="p-2 bg-purple-500/20 rounded-xl border border-purple-500/30">
+        <Cpu size={20} className="text-purple-400" />
+      </div>
+      <span className="bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-500">TOOLKIT_OS</span>
+    </div>
+    
+    <button 
+      onClick={() => navigate('/dashboard')}
+      className="group relative px-6 py-2.5 bg-white text-black rounded-full font-bold transition-all hover:pr-10 active:scale-95 overflow-hidden"
     >
-      Launch Console
+      <span className="relative z-10">Launch Console</span>
+      <ArrowRight 
+        size={18} 
+        className="absolute right-4 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-all" 
+      />
     </button>
+  </div>
+</nav>
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-6 pt-32 pb-20 relative z-10 text-center">
