@@ -114,7 +114,7 @@ const LandingPage = ({ isLoggedIn, user, onLogout }) => {
                 const FeatureIcon = feature.Icon || Icons.HelpCircle;
                 
                 // 1. Array of currently activated hackathon modules
-                const isActive = ["ChatTutor AI", "Resume Ranker", "Live Collab", "DevMatch"].includes(feature.title);
+                const isActive = ["ChatTutor AI", "Resume Ranker", "Live Collab", "DevMatch", "Quick Poll", "Focus Room"].includes(feature.title);
                 
                 // 2. Routing logic for all modules
                 const handleNavigation = () => {
@@ -123,6 +123,8 @@ const LandingPage = ({ isLoggedIn, user, onLogout }) => {
                   else if (feature.title === "Resume Ranker") navigate('/resume-ranker');
                   else if (feature.title === "Live Collab") navigate('/live-collab');
                   else if (feature.title === "DevMatch") navigate('/devmatch');
+                  else if (feature.title === "Quick Poll") navigate('/quick-poll');
+                  else if (feature.title === "Focus Room") navigate('/focus-room');
                 };
                 
                 return (

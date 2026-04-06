@@ -5,6 +5,8 @@ import ChatTutor from './components/ChatTutor';
 import AuthPage from './components/AuthPage';
 import LiveCollab from './components/LiveCollab';
 import DevMatch from './components/DevMatch';
+import QuickPoll from './components/QuickPoll';
+import FocusRoom from './components/FocusRoom';
 
 function App() {
   // 1. Core System States
@@ -43,6 +45,11 @@ function App() {
       <Route path="/live-collab" element={<LiveCollab />} />
 
       <Route path="/devmatch" element={<DevMatch />} />
+
+      <Route path="/quick-poll" element={<QuickPoll />} />
+
+      <Route path="/focus-room" element={<FocusRoom />} />
+
 
       <Route 
         path="/" 
