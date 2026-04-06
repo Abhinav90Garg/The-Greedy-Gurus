@@ -27,23 +27,31 @@ const LandingPage = () => {
         </button>
       </nav>
 
-      <main className="max-w-7xl mx-auto px-6 pt-32 relative z-10 text-center">
-        <div className="space-y-8">
-          <div className="inline-block px-4 py-1.5 rounded-full border border-white/10 bg-white/5 text-xs font-mono text-purple-400 animate-fade-in">
-            v1.0.4 AVAILABLE_FOR_DEPLOYMENT
-          </div>
-          
-          <h1 className="text-7xl md:text-9xl font-black tracking-tighter leading-tight">
-            The Future of <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-b from-white to-white/40">Workflow.</span>
-          </h1>
-          
-          <p className="text-gray-500 max-w-2xl mx-auto text-lg md:text-xl font-medium leading-relaxed">
-            A unified OS environment for students and HR professionals. 
-            powerful tools. <span className="text-white">One seamless interface.</span>
-          </p>
-        </div>
-      </main>
+      <main className="max-w-7xl mx-auto px-6 pt-32 pb-20 relative z-10 text-center">
+  <div className="space-y-12"> {/* Increased vertical spacing between elements */}
+    
+    {/* Version Badge */}
+    <div className="inline-block px-4 py-1.5 rounded-full border border-white/10 bg-white/5 text-[10px] font-mono text-purple-400 tracking-[0.2em]">
+      v1.0.4 AVAILABLE_FOR_DEPLOYMENT
+    </div>
+    
+    {/* Main Heading - The 'leading' fix is here */}
+    <h1 className="text-6xl md:text-9xl font-black tracking-tighter leading-[0.85] md:leading-[0.9]">
+      <span className="block mb-2">The Future of</span>
+      <span className="text-transparent bg-clip-text bg-gradient-to-b from-white to-white/40 block">
+        Workflow.
+      </span>
+    </h1>
+    
+    {/* Subtext */}
+    <p className="text-gray-500 max-w-3xl mx-auto text-lg md:text-xl font-medium leading-relaxed px-4">
+      A unified OS environment for students and HR professionals. 
+      <br className="hidden md:block" /> 
+      powerful tools. <span className="text-white hover:text-purple-400 transition-colors cursor-default">One seamless interface.</span>
+    </p>
+
+  </div>
+</main>
     </div>
   );
 };
