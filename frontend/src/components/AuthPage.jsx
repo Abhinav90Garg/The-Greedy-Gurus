@@ -3,11 +3,31 @@ import { motion, AnimatePresence } from 'framer-motion';
 import * as Icons from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
-const AuthPage = () => {
+const AuthPage = ({ onLogin }) => {
   const [isLogin, setIsLogin] = useState(true);
+  const [nameInput, setNameInput] = useState("");
+  const [emailInput, setEmailInput] = useState("");
   const navigate = useNavigate();
 
-  const toggleAuth = () => setIsLogin(!isLogin);
+  const toggleAuth = () => {
+    setIsLogin(!isLogin);
+    setNameInput(""); // Clear inputs on toggle
+  };
+
+  const handleAuthSubmit = (e) => {
+    e.preventDefault();
+    
+    // Logic: Use the name provided, or extract from email, or fallback
+    const displayName = nameInput.trim() 
+      || emailInput.split('@')[0].toUpperCase() 
+      || "GUEST_ROOT";
+
+    // Trigger the global login state in App.jsx
+    onLogin(displayName); 
+    
+    // Redirect to landing page which will now be unlocked
+    navigate('/');
+  };
 
   return (
     <div className="min-h-screen bg-[#050505] text-white flex items-center justify-center p-6 relative overflow-hidden font-sans">
@@ -51,12 +71,15 @@ const AuthPage = () => {
                 {isLogin ? 'Initialize your session.' : 'Register new core identity.'}
               </p>
 
-              <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+              <form className="space-y-4" onSubmit={handleAuthSubmit}>
                 {!isLogin && (
                   <div className="relative group">
                     <Icons.User className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-purple-400 transition-colors" size={18} />
                     <input 
                       type="text" 
+                      required
+                      value={nameInput}
+                      onChange={(e) => setNameInput(e.target.value)}
                       placeholder="FULL NAME" 
                       className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-4 outline-none focus:border-purple-500/50 transition-all font-mono text-sm tracking-widest"
                     />
@@ -67,6 +90,9 @@ const AuthPage = () => {
                   <Icons.Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-purple-400 transition-colors" size={18} />
                   <input 
                     type="email" 
+                    required
+                    value={emailInput}
+                    onChange={(e) => setEmailInput(e.target.value)}
                     placeholder="EMAIL_ADDRESS" 
                     className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-4 outline-none focus:border-purple-500/50 transition-all font-mono text-sm tracking-widest"
                   />
@@ -76,15 +102,17 @@ const AuthPage = () => {
                   <Icons.Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-purple-400 transition-colors" size={18} />
                   <input 
                     type="password" 
+                    required
                     placeholder="ACCESS_KEY" 
                     className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-4 outline-none focus:border-purple-500/50 transition-all font-mono text-sm tracking-widest"
                   />
                 </div>
 
                 <motion.button 
+                  type="submit"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className="w-full bg-white text-black py-4 rounded-2xl font-black uppercase tracking-widest text-sm mt-4 hover:bg-purple-500 hover:text-white transition-colors"
+                  className="w-full bg-white text-black py-4 rounded-2xl font-black uppercase tracking-widest text-sm mt-4 hover:bg-purple-500 hover:text-white transition-colors shadow-[0_0_20px_rgba(255,255,255,0.1)]"
                 >
                   {isLogin ? 'Execute Login' : 'Finalize Registration'}
                 </motion.button>

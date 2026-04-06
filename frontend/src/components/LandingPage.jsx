@@ -26,14 +26,44 @@ const LandingPage = () => {
       
       {/* Navbar */}
       <nav className="fixed top-6 left-1/2 -translate-x-1/2 w-[90%] max-w-5xl z-50">
-        <div className="bg-white/[0.03] border border-white/10 backdrop-blur-xl px-6 py-4 rounded-3xl flex justify-between items-center shadow-2xl">
-          <div className="flex items-center gap-3 font-bold text-xl tracking-tighter">
-            <div className="p-2 bg-purple-500/20 rounded-xl border border-purple-500/30">
-              <Icons.Cpu size={20} className="text-purple-400" />
-            </div>
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-500 uppercase font-black">OS</span>
-          </div>
-          {/* Updated Navbar Button */}
+        {/* Navbar Content */}
+<div className="bg-white/[0.03] border border-white/10 backdrop-blur-xl px-6 py-4 rounded-3xl flex justify-between items-center shadow-2xl">
+  <div className="flex items-center gap-3 font-bold text-xl tracking-tighter">
+    <div className="p-2 bg-purple-500/20 rounded-xl border border-purple-500/30">
+      <Icons.Cpu size={20} className="text-purple-400" />
+    </div>
+    <span className="bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-500 uppercase font-black">OS</span>
+  </div>
+
+  {isLoggedIn ? (
+    <div className="flex items-center gap-4">
+      {/* User Identity Chip */}
+      <div className="flex items-center gap-3 px-5 py-2 bg-white/5 border border-white/10 rounded-full">
+        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse shadow-[0_0_10px_#22c55e]" />
+        <span className="font-mono text-xs tracking-widest text-gray-300 uppercase">
+          Logged_In: <span className="text-white font-bold">{user?.name}</span>
+        </span>
+      </div>
+      
+      {/* Optional Logout Icon */}
+      <button 
+        onClick={onLogout}
+        className="p-2 hover:bg-white/10 rounded-xl transition-colors text-gray-500 hover:text-red-400"
+        title="Terminate Session"
+      >
+        <Icons.LogOut size={18} />
+      </button>
+    </div>
+  ) : (
+    <button 
+      onClick={() => navigate('/auth')} 
+      className="px-6 py-2.5 bg-white text-black rounded-full font-bold text-sm transition-all hover:bg-purple-500 hover:text-white active:scale-95"
+    >
+      Get Started
+    </button>
+  )}
+</div>
+          
 <button 
   onClick={() => navigate('/auth')} 
   className="px-6 py-2.5 bg-white text-black rounded-full font-bold text-sm transition-all hover:bg-purple-500 hover:text-white active:scale-95 shadow-[0_0_20px_rgba(255,255,255,0.3)]"
