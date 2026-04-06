@@ -1,29 +1,25 @@
 import React from 'react';
-import { 
-  Terminal, Cpu, LayoutGrid, Zap, ArrowRight, 
-  Users, Video, BarChart3, FileSearch, 
-  Github as GitHub, // This aliasing fixes the export error
-  Linkedin, Mail 
-} from 'lucide-react';
+import * as Icons from 'lucide-react'; 
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
 const LandingPage = () => {
   const navigate = useNavigate();
 
-  // Use the components directly here
+  // 7 core features for the Bento Grid
+  // Note: We use "Icon" (Capitalized) so we can render it as a component
   const features = [
-    { title: "ChatTutor AI", desc: "Personalized AI learning with integrated NLP resume ranking.", icon: Terminal, color: "text-blue-400", delay: 0.1 },
-    { title: "Focus Room", desc: "Deep work environment with integrated collaborative whiteboards.", icon: LayoutGrid, color: "text-purple-400", delay: 0.2 },
-    { title: "Content Gen", desc: "Instant AI generation for polls, summaries, and social assets.", icon: Zap, color: "text-green-400", delay: 0.3 },
-    { title: "DevMatch", desc: "Find the perfect teammates for your next hackathon or project.", icon: Users, color: "text-orange-400", delay: 0.1 },
-    { title: "Live Collab", desc: "Real-time mic, screen sharing, and synchronized sketching.", icon: Video, color: "text-red-400", delay: 0.2 },
-    { title: "Quick Poll", desc: "Gather instant feedback from your team with live data visualization.", icon: BarChart3, color: "text-yellow-400", delay: 0.3 },
-    { title: "Resume Ranker", desc: "ATS-optimized scoring system built for modern developers.", icon: FileSearch, color: "text-pink-400", delay: 0.2 },
+    { title: "ChatTutor AI", desc: "Personalized AI learning with integrated NLP resume ranking.", Icon: Icons.Terminal, color: "text-blue-400", delay: 0.1 },
+    { title: "Focus Room", desc: "Deep work environment with integrated collaborative whiteboards.", Icon: Icons.LayoutGrid, color: "text-purple-400", delay: 0.2 },
+    { title: "Content Gen", desc: "Instant AI generation for polls, summaries, and social assets.", Icon: Icons.Zap, color: "text-green-400", delay: 0.3 },
+    { title: "DevMatch", desc: "Find the perfect teammates for your next hackathon or project.", Icon: Icons.Users, color: "text-orange-400", delay: 0.1 },
+    { title: "Live Collab", desc: "Real-time mic, screen sharing, and synchronized sketching.", Icon: Icons.Video, color: "text-red-400", delay: 0.2 },
+    { title: "Quick Poll", desc: "Gather instant feedback from your team with live data visualization.", Icon: Icons.BarChart3, color: "text-yellow-400", delay: 0.3 },
+    { title: "Resume Ranker", desc: "ATS-optimized scoring system built for modern developers.", Icon: Icons.FileSearch, color: "text-pink-400", delay: 0.2 },
   ];
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white selection:bg-purple-500 overflow-x-hidden">
+    <div className="min-h-screen bg-[#050505] text-white selection:bg-purple-500 overflow-x-hidden font-sans">
       {/* Mesh Gradients */}
       <div className="fixed inset-0 pointer-events-none">
         <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-purple-900/10 blur-[120px] rounded-full" />
@@ -35,17 +31,21 @@ const LandingPage = () => {
         <div className="bg-white/[0.03] border border-white/10 backdrop-blur-xl px-6 py-4 rounded-3xl flex justify-between items-center shadow-2xl">
           <div className="flex items-center gap-3 font-bold text-xl tracking-tighter">
             <div className="p-2 bg-purple-500/20 rounded-xl border border-purple-500/30">
-              <Cpu size={20} className="text-purple-400" />
+              <Icons.Cpu size={20} className="text-purple-400" />
             </div>
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-500 uppercase">Toolkit_OS</span>
           </div>
-          <button onClick={() => navigate('/dashboard')} className="group relative px-6 py-2.5 bg-white text-black rounded-full font-bold transition-all hover:pr-12 active:scale-95 overflow-hidden">
+          <button 
+            onClick={() => navigate('/dashboard')} 
+            className="group relative px-6 py-2.5 bg-white text-black rounded-full font-bold transition-all hover:pr-12 active:scale-95 overflow-hidden"
+          >
             <span className="relative z-10 text-sm">Launch Console</span>
-            <ArrowRight size={18} className="absolute right-4 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-all" />
+            <Icons.ArrowRight size={18} className="absolute right-4 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-all" />
           </button>
         </div>
       </nav>
 
+      {/* Hero Section */}
       <main className="max-w-7xl mx-auto px-6 pt-52 pb-40 relative z-10 text-center">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
           <div className="inline-block px-4 py-1.5 rounded-full border border-white/10 bg-white/5 text-[10px] font-mono text-purple-400 tracking-[0.2em] mb-12">
@@ -64,7 +64,7 @@ const LandingPage = () => {
         {/* Bento Grid */}
         <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-60 pb-20 text-left">
           {features.map((feature, index) => {
-            const IconComponent = feature.icon; // Standard way to handle dynamic components
+            const IconComponent = feature.Icon; // Accessing the Icon component correctly
             return (
               <motion.div
                 key={index}
@@ -80,7 +80,7 @@ const LandingPage = () => {
                 <h3 className="text-2xl font-bold mb-3">{feature.title}</h3>
                 <p className="text-gray-500 text-sm leading-relaxed">{feature.desc}</p>
                 <div className="absolute top-8 right-8 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <Zap size={16} className="text-purple-500/40" />
+                  <Icons.Zap size={16} className="text-purple-500/40" />
                 </div>
               </motion.div>
             );
@@ -102,9 +102,15 @@ const LandingPage = () => {
             </div>
           </div>
           <div className="flex gap-4">
-            <a href="#" className="p-4 rounded-2xl bg-white/5 hover:bg-white/10 transition-all border border-white/5 text-gray-400 hover:text-white"><Github size={22} /></a>
-            <a href="#" className="p-4 rounded-2xl bg-white/5 hover:bg-white/10 transition-all border border-white/5 text-gray-400 hover:text-white"><Linkedin size={22} /></a>
-            <a href="#" className="p-4 rounded-2xl bg-white/5 hover:bg-white/10 transition-all border border-white/5 text-gray-400 hover:text-white"><Mail size={22} /></a>
+            <a href="#" className="p-4 rounded-2xl bg-white/5 hover:bg-white/10 transition-all border border-white/5 text-gray-400 hover:text-white">
+              <Icons.Github size={22} />
+            </a>
+            <a href="#" className="p-4 rounded-2xl bg-white/5 hover:bg-white/10 transition-all border border-white/5 text-gray-400 hover:text-white">
+              <Icons.Linkedin size={22} />
+            </a>
+            <a href="#" className="p-4 rounded-2xl bg-white/5 hover:bg-white/10 transition-all border border-white/5 text-gray-400 hover:text-white">
+              <Icons.Mail size={22} />
+            </a>
           </div>
         </div>
       </footer>
