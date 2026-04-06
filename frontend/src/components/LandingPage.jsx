@@ -31,9 +31,7 @@ const LandingPage = () => {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-6 pt-32 pb-20 relative z-10 text-center">
-        <div className="inline-block px-4 py-1.5 rounded-full border border-white/10 bg-white/5 text-[10px] font-mono text-purple-400 tracking-[0.2em] mb-12">
-          v1.0.4 AVAILABLE_FOR_DEPLOYMENT
-        </div>
+        
 
         <h1 className="text-6xl md:text-9xl font-black tracking-tighter leading-[0.9] mb-12">
           The Future of <br />
@@ -44,7 +42,7 @@ const LandingPage = () => {
         
         <p className="text-gray-500 max-w-3xl mx-auto text-lg md:text-xl font-medium mb-24 leading-relaxed">
           A unified environment for students and HR professionals. 
-          7 powerful tools. <span className="text-white">One seamless interface.</span>
+          powerful tools. <span className="text-white">One seamless interface.</span>
         </p>
 
         {/* Simplified Bento Grid */}
