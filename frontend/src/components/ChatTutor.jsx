@@ -27,6 +27,7 @@ const ChatTutor = () => {
     ]);
   }, [location.pathname]);
 
+  // Initial Handshake to get a chat_id
   useEffect(() => {
     const API_BASE = "http://127.0.0.1:8000"; 
     fetch(`${API_BASE}/new_chat`, { method: "POST" })
@@ -43,6 +44,7 @@ const ChatTutor = () => {
     scrollToBottom();
   }, [messages, loading]);
 
+  // 1. Send text messages to the AI
   const sendMessage = async () => {
     if (!message.trim() || loading) return;
     const currentInput = message;
@@ -54,7 +56,11 @@ const ChatTutor = () => {
       const res = await fetch("http://127.0.0.1:8000/ask", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ chat_id: chatId, question: currentInput }),
+        body: JSON.stringify({ 
+            chat_id: chatId, 
+            question: currentInput,
+            feature_type: mode 
+        }),
       });
       const data = await res.json();
       setMessages((prev) => [...prev, { role: "bot", text: data.answer }]);
@@ -65,15 +71,37 @@ const ChatTutor = () => {
     }
   };
 
-  const handleFileUpload = (e) => {
+  // 2. Handle Resume PDF Uploads
+  const handleFileUpload = async (e) => {
     const file = e.target.files[0];
-    if (file) {
-      setMessages(prev => [...prev, { role: "user", text: `Uploaded: ${file.name}` }]);
-      setLoading(true);
-      setTimeout(() => {
-        setMessages(prev => [...prev, { role: "bot", text: `ANALYSIS_COMPLETE: Resume "${file.name}" scored 84/100. Keywords missing: 'React Testing Library', 'CI/CD'.` }]);
-        setLoading(false);
-      }, 2000);
+    if (!file) return;
+
+    setMessages(prev => [...prev, { role: "user", text: `[FILE UPLOADED]: ${file.name}` }]);
+    setLoading(true);
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("chat_id", chatId);
+
+    try {
+      const res = await fetch("http://127.0.0.1:8000/upload_resume", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setMessages(prev => [...prev, { role: "bot", text: data.answer }]);
+      } else {
+        setMessages(prev => [...prev, { role: "bot", text: "ERROR: File processing failed." }]);
+      }
+    } catch (error) {
+      console.error("Upload error:", error);
+      setMessages(prev => [...prev, { role: "bot", text: "ERROR: Connection to Neural Engine lost." }]);
+    } finally {
+      setLoading(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
     }
   };
 
@@ -95,7 +123,7 @@ const ChatTutor = () => {
 
         <div className="flex-1 p-6 space-y-4 overflow-y-auto">
             <p className="text-[10px] font-mono text-gray-600 tracking-[0.3em] uppercase ml-2">Session_Data</p>
-            <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/5 font-mono text-[9px] text-purple-400">
+            <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/5 font-mono text-[9px] text-purple-400 break-all">
                ID: {chatId || "HANDSHAKING..."}
             </div>
         </div>
@@ -127,20 +155,22 @@ const ChatTutor = () => {
 
         <main className="flex-1 overflow-y-auto p-10 space-y-10">
           <div className="max-w-4xl mx-auto">
+            
+            {/* UPLOAD BOX (Only shows when in resume mode and no chat history) */}
             {mode === 'resume' && messages.length <= 1 && (
               <motion.div 
                 onClick={() => fileInputRef.current.click()}
                 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
                 className="max-w-2xl mx-auto border-2 border-dashed border-white/10 rounded-[3rem] p-20 text-center hover:border-purple-500/30 transition-all cursor-pointer bg-white/[0.02]"
               >
-                <input type="file" ref={fileInputRef} onChange={handleFileUpload} className="hidden" accept=".pdf,.doc,.docx" />
+                <input type="file" ref={fileInputRef} onChange={handleFileUpload} className="hidden" accept=".pdf,.doc,.docx,.txt" />
                 <Icons.UploadCloud size={48} className="mx-auto mb-6 text-purple-400" />
                 <h3 className="text-2xl font-bold mb-2 uppercase tracking-tighter">Upload_Resume</h3>
                 <p className="text-gray-500 text-sm">Drag and drop or click to analyze ATS score</p>
               </motion.div>
             )}
 
-            {/* Chat Messages */}
+            {/* CHAT MESSAGES */}
             {messages.map((msg, i) => (
               <motion.div
                 key={i}
@@ -153,7 +183,9 @@ const ChatTutor = () => {
                 }`}>
                   {msg.role === 'bot' ? <Icons.Cpu size={18} /> : <Icons.User size={18} />}
                 </div>
-                <div className={`p-6 rounded-[2.5rem] text-sm leading-relaxed max-w-[85%] border shadow-2xl ${
+                
+                {/* 3. The whitespace-pre-wrap class is applied here to fix formatting */}
+                <div className={`p-6 rounded-[2.5rem] text-sm leading-relaxed max-w-[85%] border shadow-2xl whitespace-pre-wrap ${
                   msg.role === 'bot' ? 'bg-white/[0.03] border-white/5 text-gray-300 rounded-tl-none' : 'bg-purple-600/10 border-purple-500/20 text-white rounded-tr-none'
                 }`}>
                   {msg.text}
