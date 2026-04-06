@@ -1,30 +1,46 @@
 import React from 'react';
-import { Terminal, Cpu, LayoutGrid, Zap } from 'lucide-react';
+import { Terminal, Cpu, LayoutGrid, Zap, ArrowRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const LandingPage = () => {
+  const navigate = useNavigate();
+
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white selection:bg-purple-500">
-      {/* Background Glow */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-purple-600/20 blur-[120px] pointer-events-none" />
+    <div className="min-h-screen bg-[#050505] text-white selection:bg-purple-500 overflow-hidden">
+      {/* Mesh Gradients for that 'Sleek' look */}
+      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-purple-900/20 blur-[120px] rounded-full" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-900/20 blur-[120px] rounded-full" />
       
-      <nav className="flex justify-between items-center p-6 border-b border-white/10 backdrop-blur-md sticky top-0 z-50">
-        <div className="flex items-center gap-2 font-bold text-xl tracking-tighter">
-          <Cpu className="text-purple-500" />
+      <nav className="flex justify-between items-center p-6 border-b border-white/5 backdrop-blur-xl sticky top-0 z-50">
+        <div className="flex items-center gap-2 font-bold text-xl tracking-tighter group cursor-default">
+          <div className="p-2 bg-white/5 rounded-lg border border-white/10 group-hover:border-purple-500/50 transition-colors">
+            <Cpu size={20} className="text-purple-500" />
+          </div>
           <span>TOOLKIT_OS</span>
         </div>
-        <button className="bg-white text-black px-5 py-2 rounded-full font-medium hover:bg-purple-500 hover:text-white transition-all">
+        <button 
+          onClick={() => navigate('/auth')}
+          className="group flex items-center gap-2 bg-white text-black px-6 py-2.5 rounded-full font-bold hover:bg-purple-500 hover:text-white transition-all active:scale-95"
+        >
           Launch Console
+          <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
         </button>
       </nav>
 
-      <main className="max-w-7xl mx-auto px-6 pt-20">
-        <div className="text-center space-y-6">
-          <h1 className="text-6xl md:text-8xl font-extrabold tracking-tight">
-            The Future of <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">Workflow.</span>
+      <main className="max-w-7xl mx-auto px-6 pt-32 relative z-10 text-center">
+        <div className="space-y-8">
+          <div className="inline-block px-4 py-1.5 rounded-full border border-white/10 bg-white/5 text-xs font-mono text-purple-400 animate-fade-in">
+            v1.0.4 AVAILABLE_FOR_DEPLOYMENT
+          </div>
+          
+          <h1 className="text-7xl md:text-9xl font-black tracking-tighter leading-tight">
+            The Future of <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-b from-white to-white/40">Workflow.</span>
           </h1>
-          <p className="text-gray-400 max-w-2xl mx-auto text-lg">
+          
+          <p className="text-gray-500 max-w-2xl mx-auto text-lg md:text-xl font-medium leading-relaxed">
             A unified OS environment for students and HR professionals. 
-            powerful tools. One seamless interface.
+            7 powerful tools. <span className="text-white">One seamless interface.</span>
           </p>
         </div>
       </main>
