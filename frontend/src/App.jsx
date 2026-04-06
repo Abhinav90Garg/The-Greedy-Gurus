@@ -1,37 +1,74 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import LandingPage from './components/LandingPage';
 import ChatTutor from './components/ChatTutor';
-import AuthPage from './components/AuthPage'; // Import the new Auth component
+import AuthPage from './components/AuthPage';
 
 function App() {
-
+  // 1. Core System States
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [user, setUser] = useState(null); // Store user data here
+  const [user, setUser] = useState(null);
 
+  // 2. Persistence Logic (Stays logged in even after refresh)
+  useEffect(() => {
+    const savedUser = localStorage.getItem('os_session_user');
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));
+      setIsLoggedIn(true);
+    }
+  }, []);
+
+  // 3. System Handlers
   const handleLogin = (name) => {
+    const userData = { name: name };
+    localStorage.setItem('os_session_user', JSON.stringify(userData));
     setIsLoggedIn(true);
-    setUser({ name: name });
+    setUser(userData);
   };
 
   const handleLogout = () => {
+    localStorage.removeItem('os_session_user');
     setIsLoggedIn(false);
     setUser(null);
   };
+
   return (
     <Routes>
-      {/* Primary Landing Page */}
-      <Route path="/" element={<LandingPage />} />
+      {/* CRITICAL: We pass props here so LandingPage knows 
+          whether to show the LOCK or the BENTO CARDS 
+      */}
+      <Route 
+        path="/" 
+        element={
+          <LandingPage 
+            isLoggedIn={isLoggedIn} 
+            user={user} 
+            onLogout={handleLogout} 
+          />
+        } 
+      />
       
-      {/* Authentication Layer */}
-      <Route path="/auth" element={<AuthPage />} />
+      {/* Pass handleLogin so AuthPage can trigger the unlock */}
+      <Route 
+        path="/auth" 
+        element={<AuthPage onLogin={handleLogin} />} 
+      />
       
-      {/* Feature Modules */}
-      <Route path="/chattutor" element={<ChatTutor />} />
-      <Route path="/resume-ranker" element={<ChatTutor />} />
-      <Route path="/dashboard" element={<ChatTutor />} />
+      {/* Protected Routes: Only accessible if logged in */}
+      <Route 
+        path="/chattutor" 
+        element={isLoggedIn ? <ChatTutor /> : <Navigate to="/auth" />} 
+      />
+      <Route 
+        path="/resume-ranker" 
+        element={isLoggedIn ? <ChatTutor /> : <Navigate to="/auth" />} 
+      />
+      <Route 
+        path="/dashboard" 
+        element={isLoggedIn ? <ChatTutor /> : <Navigate to="/auth" />} 
+      />
       
-      {/* Smart Fallback: Redirect unknown routes to Home */}
+      {/* Fallback */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
