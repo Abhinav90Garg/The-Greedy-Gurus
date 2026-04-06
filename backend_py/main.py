@@ -1,89 +1,48 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 import requests
-from fastapi.middleware.cors import CORSMiddleware
+import uuid
 
 app = FastAPI()
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # later restrict if needed
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-conversation = []
-weak_topics = {}
-level = "beginner"
+# store chats: {chat_id: [messages]}
+chats = {}
 
 class Query(BaseModel):
+    chat_id: str
     question: str
 
-@app.get("/")
-def home():
-    return {"message": "ChatTutor backend running"}
+@app.post("/new_chat")
+def new_chat():
+    chat_id = str(uuid.uuid4())
+    chats[chat_id] = []
+    return {"chat_id": chat_id}
+
+@app.get("/chats")
+def get_chats():
+    return {"chats": list(chats.keys())}
 
 @app.post("/ask")
 def ask(query: Query):
-    global level
+    chat_id = query.chat_id
 
-    
-    conversation.append({"role": "user", "content": query.question})
+    if chat_id not in chats:
+        chats[chat_id] = []
 
+    chats[chat_id].append(query.question)
+    chats[chat_id] = chats[chat_id][-3:]  # keep last 3
 
-    words = query.question.lower().split()
-    for word in words:
-        weak_topics[word] = weak_topics.get(word, 0) + 1
+    context = "\n".join(chats[chat_id])
 
-    
-    if any(word in query.question.lower() for word in ["class", "basic", "simple"]):
-        level = "beginner"
-    elif any(word in query.question.lower() for word in ["code", "implement", "algorithm"]):
-        level = "advanced"
-    else:
-        level = "intermediate"
-
-    
-    prompt = f"""
-You are an intelligent AI tutor.
-
-Student level: {level}
-Student weak topics: {list(weak_topics.keys())}
-
-Rules:
-- Teach step-by-step
-- Adjust explanation based on level:
-  - beginner → very simple with examples
-  - intermediate → balanced explanation
-  - advanced → technical and detailed
-- If question is unclear, ask 1 clarifying question first
-- Guide instead of directly giving answers
-- Focus more on weak topics if relevant
-- Ask follow-up questions to engage the student
-
-Student question:
-{query.question}
-"""
-
-    
     response = requests.post(
         "http://localhost:11434/api/generate",
         json={
             "model": "llama3",
-            "prompt": prompt,
+            "prompt": context,
             "stream": False
         }
     )
 
-    answer = response.json()["response"]
+    result = response.json()
 
-    
-    conversation.append({"role": "assistant", "content": answer})
-
-    return {
-        "answer": answer,
-        "level": level,
-        "weak_topics": weak_topics,
-        "history": conversation
-    }
+    return {"answer": result["response"]}

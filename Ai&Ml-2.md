@@ -51,7 +51,6 @@ Python
 - Source code  
 - README with setup  
 
-
 ## ⏱️ Constraints
 - 24 hours  
 - Focus on MVP first  
