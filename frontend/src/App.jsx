@@ -36,14 +36,6 @@ function App() {
 
   return (
     <Routes>
-      {/* CRITICAL: We pass props here so LandingPage knows 
-          whether to show the LOCK or the BENTO CARDS 
-      */}
-
-      <Route path="/live-collab" element={<LiveCollab />} />
-
-      <Route path="/devmatch" element={<DevMatch />} />
-
       <Route 
         path="/" 
         element={
@@ -55,27 +47,40 @@ function App() {
         } 
       />
       
-      {/* Pass handleLogin so AuthPage can trigger the unlock */}
       <Route 
         path="/auth" 
         element={<AuthPage onLogin={handleLogin} />} 
       />
       
       {/* Protected Routes: Only accessible if logged in */}
+      
+      {/* FIXED: Path now matches LandingPage navigation ('/dev-match') */}
+      <Route 
+        path="/dev-match" 
+        element={isLoggedIn ? <DevMatch user={user} /> : <Navigate to="/auth" />} 
+      />
+
+      <Route 
+        path="/live-collab" 
+        element={isLoggedIn ? <LiveCollab /> : <Navigate to="/auth" />} 
+      />
+
       <Route 
         path="/chattutor" 
-        element={isLoggedIn ? <ChatTutor /> : <Navigate to="/auth" />} 
+        element={isLoggedIn ? <ChatTutor user={user} /> : <Navigate to="/auth" />} 
       />
+
       <Route 
         path="/resume-ranker" 
-        element={isLoggedIn ? <ChatTutor /> : <Navigate to="/auth" />} 
+        element={isLoggedIn ? <ChatTutor user={user} /> : <Navigate to="/auth" />} 
       />
+
       <Route 
         path="/dashboard" 
-        element={isLoggedIn ? <ChatTutor /> : <Navigate to="/auth" />} 
+        element={isLoggedIn ? <ChatTutor user={user} /> : <Navigate to="/auth" />} 
       />
       
-      {/* Fallback */}
+      {/* Fallback: Unknown routes go to Landing */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

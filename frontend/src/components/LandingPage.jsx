@@ -136,7 +136,6 @@ const LandingPage = ({ isLoggedIn, user, onLogout }) => {
           </motion.div>
         </motion.div>
 
-        {/* Locked / Bento Section */}
         <div className="relative mt-60">
           {!isLoggedIn ? (
             <div className="relative py-40">
@@ -161,15 +160,16 @@ const LandingPage = ({ isLoggedIn, user, onLogout }) => {
               {features.map((feature, index) => {
                 const FeatureIcon = feature.Icon || Icons.HelpCircle;
                 
-                // Unified Active State Logic
-                const isActive = ["ChatTutor AI", "Resume Ranker", "Live Collab", "Content Gen"].includes(feature.title);
+                // Redirection Logic including DevMatch
+                const isActive = ["ChatTutor AI", "Resume Ranker", "Live Collab", "Content Gen", "DevMatch"].includes(feature.title);
                 
                 const handleNavigation = () => {
                   if (!isActive) return;
                   if (feature.title === "ChatTutor AI") navigate('/chattutor');
                   else if (feature.title === "Resume Ranker") navigate('/resume-ranker');
                   else if (feature.title === "Live Collab") navigate('/live-collab');
-                  else if (feature.title === "Content Gen") navigate('/chattutor'); // Content Gen redirects to Neural Interface
+                  else if (feature.title === "Content Gen") navigate('/chattutor');
+                  else if (feature.title === "DevMatch") navigate('/dev-match');
                 };
                 
                 return (
