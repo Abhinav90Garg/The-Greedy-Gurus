@@ -1,17 +1,25 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import LandingPage from './components/LandingPage';
 import ChatTutor from './components/ChatTutor';
+import AuthPage from './components/AuthPage'; // Import the new Auth component
 
 function App() {
   return (
     <Routes>
+      {/* Primary Landing Page */}
       <Route path="/" element={<LandingPage />} />
+      
+      {/* Authentication Layer */}
+      <Route path="/auth" element={<AuthPage />} />
+      
+      {/* Feature Modules */}
       <Route path="/chattutor" element={<ChatTutor />} />
-      <Route path="/dashboard" element={<ChatTutor />} />
       <Route path="/resume-ranker" element={<ChatTutor />} />
-      {/* Fallback to home if route doesn't exist */}
-      <Route path="*" element={<LandingPage />} />
+      <Route path="/dashboard" element={<ChatTutor />} />
+      
+      {/* Smart Fallback: Redirect unknown routes to Home */}
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }
