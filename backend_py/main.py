@@ -6,6 +6,7 @@ app = FastAPI()
 
 conversation = []
 weak_topics = {}
+level = "beginner"
 
 class Query(BaseModel):
     question: str
@@ -16,30 +17,47 @@ def home():
 
 @app.post("/ask")
 def ask(query: Query):
+    global level
+
+    
     conversation.append({"role": "user", "content": query.question})
 
-    # --- weak topic detection ---
+
     words = query.question.lower().split()
     for word in words:
         weak_topics[word] = weak_topics.get(word, 0) + 1
 
+    
+    if any(word in query.question.lower() for word in ["class", "basic", "simple"]):
+        level = "beginner"
+    elif any(word in query.question.lower() for word in ["code", "implement", "algorithm"]):
+        level = "advanced"
+    else:
+        level = "intermediate"
+
+    
     prompt = f"""
 You are an intelligent AI tutor.
 
+Student level: {level}
 Student weak topics: {list(weak_topics.keys())}
 
 Rules:
 - Teach step-by-step
+- Adjust explanation based on level:
+  - beginner → very simple with examples
+  - intermediate → balanced explanation
+  - advanced → technical and detailed
 - If question is unclear, ask 1 clarifying question first
-- Guide the student instead of directly giving the answer
+- Guide instead of directly giving answers
 - Focus more on weak topics if relevant
-- Use simple and clear language
 - Ask follow-up questions to engage the student
 
 Student question:
 {query.question}
 """
 
+    
     response = requests.post(
         "http://localhost:11434/api/generate",
         json={
@@ -51,10 +69,12 @@ Student question:
 
     answer = response.json()["response"]
 
+    
     conversation.append({"role": "assistant", "content": answer})
 
     return {
         "answer": answer,
+        "level": level,
         "weak_topics": weak_topics,
         "history": conversation
     }
