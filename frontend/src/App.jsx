@@ -38,22 +38,7 @@ function App() {
 
   return (
     <Routes>
-<<<<<<< HEAD
-=======
-      {/* CRITICAL: We pass props here so LandingPage knows 
-          whether to show the LOCK or the BENTO CARDS 
-      */}
-
-      <Route path="/live-collab" element={<LiveCollab />} />
-
-      <Route path="/devmatch" element={<DevMatch />} />
-
-      <Route path="/quick-poll" element={<QuickPoll />} />
-
-      <Route path="/focus-room" element={<FocusRoom />} />
-
-
->>>>>>> 5e9a7fcb8fb2dd53dc3c5f59460b60e8e45720c4
+      {/* Public Routes */}
       <Route 
         path="/" 
         element={
@@ -72,7 +57,6 @@ function App() {
       
       {/* Protected Routes: Only accessible if logged in */}
       
-      {/* FIXED: Path now matches LandingPage navigation ('/dev-match') */}
       <Route 
         path="/dev-match" 
         element={isLoggedIn ? <DevMatch user={user} /> : <Navigate to="/auth" />} 
@@ -80,7 +64,7 @@ function App() {
 
       <Route 
         path="/live-collab" 
-        element={isLoggedIn ? <LiveCollab /> : <Navigate to="/auth" />} 
+        element={isLoggedIn ? <LiveCollab user={user} /> : <Navigate to="/auth" />} 
       />
 
       <Route 
@@ -91,6 +75,16 @@ function App() {
       <Route 
         path="/resume-ranker" 
         element={isLoggedIn ? <ChatTutor user={user} /> : <Navigate to="/auth" />} 
+      />
+
+      <Route 
+        path="/quick-poll" 
+        element={isLoggedIn ? <QuickPoll user={user} /> : <Navigate to="/auth" />} 
+      />
+
+      <Route 
+        path="/focus-room" 
+        element={isLoggedIn ? <FocusRoom user={user} /> : <Navigate to="/auth" />} 
       />
 
       <Route 
