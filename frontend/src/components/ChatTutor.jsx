@@ -41,7 +41,7 @@ const ChatTutor = () => {
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages]);
+  }, [messages, loading]);
 
   const sendMessage = async () => {
     if (!message.trim() || loading) return;
@@ -70,7 +70,6 @@ const ChatTutor = () => {
     if (file) {
       setMessages(prev => [...prev, { role: "user", text: `Uploaded: ${file.name}` }]);
       setLoading(true);
-      // Simulate file processing for the demo
       setTimeout(() => {
         setMessages(prev => [...prev, { role: "bot", text: `ANALYSIS_COMPLETE: Resume "${file.name}" scored 84/100. Keywords missing: 'React Testing Library', 'CI/CD'.` }]);
         setLoading(false);
@@ -128,7 +127,6 @@ const ChatTutor = () => {
 
         <main className="flex-1 overflow-y-auto p-10 space-y-10">
           <div className="max-w-4xl mx-auto">
-            {/* Resume Mode File Upload */}
             {mode === 'resume' && messages.length <= 1 && (
               <motion.div 
                 onClick={() => fileInputRef.current.click()}
@@ -162,11 +160,30 @@ const ChatTutor = () => {
                 </div>
               </motion.div>
             ))}
+
+            {/* LOADING INDICATOR */}
+            {loading && (
+              <motion.div 
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="flex gap-6 mb-10"
+              >
+                <div className="w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 border bg-purple-500/10 border-purple-500/20 text-purple-400 animate-pulse">
+                  <Icons.Cpu size={18} />
+                </div>
+                <div className="p-6 rounded-[2.5rem] rounded-tl-none text-sm bg-white/[0.03] border border-white/5 text-gray-500 shadow-2xl flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 bg-purple-500 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
+                  <span className="w-1.5 h-1.5 bg-purple-500 rounded-full animate-bounce [animation-delay:-0.15s]"></span>
+                  <span className="w-1.5 h-1.5 bg-purple-500 rounded-full animate-bounce"></span>
+                  <span className="ml-2 font-mono text-[10px] tracking-widest uppercase opacity-50 italic">Neural_Processing...</span>
+                </div>
+              </motion.div>
+            )}
+
             <div ref={messagesEndRef} />
           </div>
         </main>
 
-        {/* INPUT TERMINAL (The Vanished Part) */}
         <footer className="p-10 bg-gradient-to-t from-black to-transparent relative z-20">
           <div className="max-w-4xl mx-auto relative group">
             <input
