@@ -6,12 +6,11 @@ const ChatTutor = () => {
   const [chatId, setChatId] = useState("");
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([
-    { role: "bot", text: "SYSTEM_INITIALIZED. New session established. How can I assist your workflow today?" }
+    { role: "bot", text: "SYSTEM_READY. Neural link established. How can I assist your workflow today?" }
   ]);
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef(null);
 
-  // Auto-scroll to bottom
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -20,26 +19,18 @@ const ChatTutor = () => {
     scrollToBottom();
   }, [messages]);
 
-  // INITIALIZE BACKEND SESSION
   useEffect(() => {
-    // Replace with your Render URL if deployed
     const API_BASE = "http://127.0.0.1:8000"; 
-    
     fetch(`${API_BASE}/new_chat`, { method: "POST" })
       .then((res) => res.json())
-      .then((data) => {
-        setChatId(data.chat_id);
-        console.log("Session ID Secured:", data.chat_id);
-      })
+      .then((data) => setChatId(data.chat_id))
       .catch(err => console.error("Handshake Failed:", err));
   }, []);
 
   const sendMessage = async () => {
     if (!message.trim() || loading) return;
-
     const currentInput = message;
-    const userMsg = { role: "user", text: currentInput };
-    setMessages((prev) => [...prev, userMsg]);
+    setMessages((prev) => [...prev, { role: "user", text: currentInput }]);
     setMessage("");
     setLoading(true);
 
@@ -47,96 +38,137 @@ const ChatTutor = () => {
       const res = await fetch("http://127.0.0.1:8000/ask", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          chat_id: chatId,
-          question: currentInput,
-        }),
+        body: JSON.stringify({ chat_id: chatId, question: currentInput }),
       });
-
       const data = await res.json();
-      const botMsg = { role: "bot", text: data.answer };
-      setMessages((prev) => [...prev, botMsg]);
+      setMessages((prev) => [...prev, { role: "bot", text: data.answer }]);
     } catch (error) {
-      setMessages((prev) => [...prev, { role: "bot", text: "ERROR: Connection to Neural Engine lost." }]);
+      setMessages((prev) => [...prev, { role: "bot", text: "ERROR: Connection lost." }]);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="h-screen bg-[#020202] text-white flex flex-col font-sans overflow-hidden">
-      {/* OS Top Bar */}
-      <header className="h-20 border-b border-white/5 bg-black/40 backdrop-blur-xl flex items-center px-8 justify-between z-20">
-        <div className="flex items-center gap-4">
-          <div className="p-2 bg-purple-500/20 rounded-lg border border-purple-500/30">
-            <Icons.Cpu size={20} className="text-purple-400" />
-          </div>
-          <div>
-            <h2 className="font-black tracking-tighter text-lg uppercase">ChatTutor_v1.0</h2>
-            <p className="text-[10px] font-mono text-gray-500 tracking-widest uppercase">
-              Status: <span className="text-green-500">Connected</span> // Session: {chatId.slice(0,8)}...
-            </p>
-          </div>
-        </div>
-        <button onClick={() => window.history.back()} className="text-gray-500 hover:text-white transition-colors">
-          <Icons.X size={24} />
-        </button>
-      </header>
-
-      {/* Chat Space */}
-      <main className="flex-1 overflow-y-auto p-6 md:p-12 space-y-8 scrollbar-hide">
-        <div className="max-w-4xl mx-auto">
-          {messages.map((msg, i) => (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              key={i}
-              className={`flex gap-4 mb-8 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}
-            >
-              <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border ${
-                msg.role === 'bot' ? 'bg-purple-500/10 border-purple-500/20 text-purple-400' : 'bg-white/5 border-white/10 text-gray-400'
-              }`}>
-                {msg.role === 'bot' ? <Icons.Sparkles size={18} /> : <Icons.User size={18} />}
-              </div>
-              <div className={`p-5 rounded-[2rem] text-sm leading-relaxed max-w-[80%] border shadow-2xl ${
-                msg.role === 'bot' ? 'bg-white/[0.03] border-white/5 text-gray-300 rounded-tl-none' : 'bg-purple-600/10 border-purple-500/20 text-white rounded-tr-none'
-              }`}>
-                {msg.text}
-              </div>
-            </motion.div>
-          ))}
-          {loading && (
-            <div className="flex gap-4 animate-pulse">
-              <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10" />
-              <div className="bg-white/5 h-12 w-40 rounded-[2rem] border border-white/5" />
-            </div>
-          )}
-          <div ref={messagesEndRef} />
-        </div>
-      </main>
-
-      {/* Input Area */}
-      <footer className="p-8 bg-gradient-to-t from-black to-transparent">
-        <div className="max-w-4xl mx-auto relative group">
-          <input
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
-            placeholder={loading ? "AI is thinking..." : "Terminal command input..."}
-            className="w-full bg-white/[0.03] border border-white/10 rounded-[2.5rem] py-6 pl-8 pr-20 outline-none focus:border-purple-500/50 transition-all text-sm placeholder:text-gray-700"
-          />
-          <button 
-            onClick={sendMessage}
-            disabled={loading}
-            className="absolute right-3 top-1/2 -translate-y-1/2 w-12 h-12 bg-white text-black rounded-full flex items-center justify-center hover:bg-purple-500 hover:text-white transition-all disabled:opacity-50"
-          >
-            <Icons.ArrowUp size={20} strokeWidth={3} />
+    <div className="h-screen bg-[#020202] text-white flex font-sans overflow-hidden">
+      
+      {/* SIDEBAR: HISTORY & SESSION INFO */}
+      <aside className="w-80 border-r border-white/5 bg-black/60 backdrop-blur-3xl flex flex-col hidden lg:flex">
+        <div className="p-8 border-b border-white/5">
+          <button className="w-full py-4 px-6 bg-white/[0.03] border border-white/10 rounded-2xl flex items-center justify-between group hover:bg-white/10 transition-all">
+            <span className="text-xs font-black tracking-widest uppercase italic">New_Session</span>
+            <Icons.Plus size={16} className="text-purple-500 group-hover:rotate-90 transition-transform" />
           </button>
         </div>
-        <p className="text-center mt-4 text-[9px] font-mono text-gray-800 tracking-[0.4em] uppercase">
-          Neural_Link_Status: Active // Data_Encryption: Enabled
-        </p>
-      </footer>
+
+        <div className="flex-1 overflow-y-auto p-6 space-y-4">
+          <p className="text-[10px] font-mono text-gray-600 tracking-[0.3em] uppercase ml-2">Session_History</p>
+          
+          {/* Active Session Card */}
+          <div className="p-4 rounded-2xl bg-purple-500/10 border border-purple-500/20 flex items-center gap-3">
+            <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse" />
+            <div className="overflow-hidden">
+              <p className="text-xs font-bold truncate uppercase tracking-tighter">Current Link</p>
+              <p className="text-[9px] text-gray-500 font-mono">{chatId || "SECURE_GEN..."}</p>
+            </div>
+          </div>
+
+          {/* Dummy History Items for Visual Polish */}
+          {['Resume_Ranker_V2', 'Algorithm_Opt', 'Data_Structures_Help'].map((item, i) => (
+            <div key={i} className="p-4 rounded-2xl bg-white/[0.02] border border-white/5 flex items-center gap-3 opacity-40 hover:opacity-100 transition-opacity cursor-pointer">
+              <Icons.MessageSquare size={14} className="text-gray-600" />
+              <p className="text-[11px] font-medium text-gray-400">{item}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* User Profile Section */}
+        <div className="p-6 border-t border-white/5 bg-white/[0.01]">
+          <div className="flex items-center gap-4">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-600 to-blue-600 flex items-center justify-center font-black text-xs">GK</div>
+            <div className="flex-1 overflow-hidden">
+              <p className="text-xs font-black tracking-tight truncate uppercase italic">Gurleen Kaur</p>
+              <p className="text-[9px] text-gray-600 font-mono tracking-widest uppercase">Admin // CU_Dev</p>
+            </div>
+            <Icons.Settings size={16} className="text-gray-700 hover:text-white cursor-pointer transition-colors" />
+          </div>
+        </div>
+      </aside>
+
+      {/* MAIN CHAT AREA */}
+      <div className="flex-1 flex flex-col relative">
+        {/* Top Header */}
+        <header className="h-20 border-b border-white/5 bg-black/20 backdrop-blur-xl flex items-center px-10 justify-between">
+          <div className="flex items-center gap-4 lg:hidden">
+             <Icons.Menu size={24} className="text-purple-400" />
+          </div>
+          <div className="flex items-center gap-3">
+            <Icons.Cpu size={18} className="text-purple-500" />
+            <h2 className="text-sm font-black tracking-widest uppercase italic">Neural_Interface_V1.4</h2>
+          </div>
+          <div className="flex items-center gap-6">
+             <div className="flex -space-x-2">
+                <div className="w-6 h-6 rounded-full border border-black bg-purple-500" />
+                <div className="w-6 h-6 rounded-full border border-black bg-blue-500" />
+             </div>
+             <button onClick={() => window.history.back()} className="text-gray-500 hover:text-white"><Icons.Power size={20} /></button>
+          </div>
+        </header>
+
+        {/* Messages */}
+        <main className="flex-1 overflow-y-auto p-10 space-y-10">
+          <div className="max-w-4xl mx-auto">
+            {messages.map((msg, i) => (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                key={i}
+                className={`flex gap-6 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}
+              >
+                <div className={`w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 border ${
+                  msg.role === 'bot' ? 'bg-purple-500/10 border-purple-500/20 text-purple-400' : 'bg-white/5 border-white/10 text-gray-400'
+                }`}>
+                  {msg.role === 'bot' ? <Icons.Cpu size={18} /> : <Icons.User size={18} />}
+                </div>
+                <div className={`p-6 rounded-[2.5rem] text-sm leading-relaxed max-w-[85%] border shadow-2xl ${
+                  msg.role === 'bot' ? 'bg-white/[0.03] border-white/5 text-gray-300 rounded-tl-none' : 'bg-purple-600/10 border-purple-500/20 text-white rounded-tr-none'
+                }`}>
+                  {msg.text}
+                </div>
+              </motion.div>
+            ))}
+            {loading && (
+              <div className="flex gap-6 animate-pulse">
+                <div className="w-10 h-10 rounded-2xl bg-white/5 border border-white/10" />
+                <div className="bg-white/5 h-14 w-60 rounded-[2.5rem] border border-white/5" />
+              </div>
+            )}
+            <div ref={messagesEndRef} />
+          </div>
+        </main>
+
+        {/* Input */}
+        <footer className="p-10 bg-gradient-to-t from-black to-transparent">
+          <div className="max-w-4xl mx-auto relative group">
+            <input
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
+              placeholder={loading ? "Analyzing..." : "Awaiting user input..."}
+              className="w-full bg-white/[0.03] border border-white/10 rounded-[3rem] py-7 pl-10 pr-24 outline-none focus:border-purple-500/50 transition-all text-sm placeholder:text-gray-800"
+            />
+            <button 
+              onClick={sendMessage}
+              disabled={loading}
+              className="absolute right-4 top-1/2 -translate-y-1/2 w-14 h-14 bg-white text-black rounded-full flex items-center justify-center hover:bg-purple-500 hover:text-white transition-all shadow-xl"
+            >
+              <Icons.Send size={22} />
+            </button>
+          </div>
+          <p className="text-center mt-6 text-[8px] font-mono text-gray-800 tracking-[0.6em] uppercase">
+            Data_Transmission: Encrypted // Core_Load: {loading ? '88%' : '12%'}
+          </p>
+        </footer>
+      </div>
     </div>
   );
 };
